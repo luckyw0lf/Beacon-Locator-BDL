@@ -1,1 +1,3 @@
 __repo__/**
+debug/**
+.vscode/mcuxpresso-tools.json
