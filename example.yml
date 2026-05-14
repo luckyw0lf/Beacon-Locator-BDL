@@ -1,0 +1,15 @@
+general_getting_started:
+  boards:
+    frdmmcxa153: []
+  contents:
+    document:
+      brief: Getting started example.
+      category: ese_examples/general
+      example_readme:
+      - examples/ese_examples/general/getting_started/readme.md
+      - ${board_root}/${board}/ese_examples/general/getting_started/example_board_readme.md
+      - ${board_root}/${board}/examples_shared_readme.md
+      name: general_getting_started${core_id_suffix_name}
+    meta_path: examples/ese_examples/general/getting_started
+    project-root-path: boards/${board}/ese_examples/general/getting_started/${multicore_foldername}
+  section-type: freestanding_application
