@@ -1,3 +1,6 @@
 __repo__/**
 debug/**
 .vscode/mcuxpresso-tools.json
+.vscode/c_cpp_properties.json
+mcux_include.json
+

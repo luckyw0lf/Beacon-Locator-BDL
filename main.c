@@ -2,12 +2,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <MCXA153.h>
 
 #include "leds.h"
 #include "serial.h"
 #include "states.h"
 #include "state_init.h"
-#include "state_idle.h"
+#include "state_menu.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -24,22 +25,19 @@
 // -----------------------------------------------------------------------------
 // Local variables
 // -----------------------------------------------------------------------------
-static volatile uint32_t ms = 0;
+volatile uint32_t ms = 0;
 static volatile uint32_t previous_ms = 0;
 static StateMachine_t systemSM;
-extern char * stateEnumToText[];
-
 // define states here
-static State_t STATE_INIT = { &init_entry, &init_main, &init_exit, "Initializing.." };
-static State_t STATE_IDLE = { &idle_entry, &idle_main, &idle_exit, "Idle." };
+State_t STATE_INIT = { &init_entry, &init_main, &init_exit, "INIT" };
+State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
+State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // Main application
 int main(void)
 {   
     initStateMachine(&systemSM, &STATE_INIT);
-    addToQueue(&systemSM, &STATE_IDLE);
-    addToQueue(&systemSM, &STATE_IDLE);
 
     while(1)
     {
@@ -49,3 +47,7 @@ int main(void)
 // -----------------------------------------------------------------------------
 // Local function implementation
 // -----------------------------------------------------------------------------
+void SysTick_Handler(void)
+{
+    ms++;
+}

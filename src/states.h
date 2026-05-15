@@ -1,6 +1,4 @@
 #include "fifo.h"
-#include "state_init.h"
-#include "state_idle.h"
 
 #ifndef STATES_H
 #define STATES_H
@@ -17,7 +15,6 @@ struct State_t {
     void (*exit)(StateMachine_t *sm);
     char name[20];
 };
-
 
 struct StateMachine_t {
     const State_t *state;

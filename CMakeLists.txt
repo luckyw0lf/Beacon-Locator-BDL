@@ -18,35 +18,46 @@ include(${SdkRootDirPath}/CMakeLists.txt)
 
 mcux_add_source(
     SOURCES board/board.h
-            fifo/fifo.c
-            fifo/fifo.h
-            leds/leds.c
-            leds/leds.h
+            lib/fifo/fifo.c
+            lib/fifo/fifo.h
+            lib/leds/leds.c
+            lib/leds/leds.h
+            lib/serial/retarget.c
+            lib/serial/serial.c
+            lib/serial/serial.h
+            lib/lcd/lcd.c
+            lib/lcd/lcd.h
+            lib/lpi2c/lpi2c.c
+            lib/lpi2c/lpi2c.h
+
             main.c
-            serial/retarget.c
-            serial/serial.c
-            serial/serial.h
-            lib/states.c
-            lib/states.h
-            lib/states/state_init.c
-            lib/states/state_init.h
-            lib/states/state_idle.c
-            lib/states/state_idle.h
-            lib/states/state_searching_beacon.c
-            lib/states/state_searching_beacon.h
-            lib/hm10/hm10.c
-            lib/hm10/hm10.h
+            src/states.c
+            src/states.h
+            src/states/state_init.c
+            src/states/state_init.h
+            src/states/state_searching_beacon.c
+            src/states/state_searching_beacon.h
+            src/states/state_menu.c
+            src/states/state_menu.h
+            src/hm10/hm10.c
+            src/hm10/hm10.h
+            src/helperFunctions.c
+            src/helperFunctions.h
+            src/keypad.c
+            src/keypad.h
 )
 
 mcux_add_include(
     INCLUDES .
              board
-             fifo
-             leds
-             serial
-             lib
-             lib/states
-             lib/hm10
+             lib/fifo
+             lib/leds
+             lib/serial
+             lib/lcd
+             lib/lpi2c
+             src
+             src/states
+             src/hm10
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
 

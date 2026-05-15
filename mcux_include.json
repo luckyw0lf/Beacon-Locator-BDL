@@ -10,7 +10,7 @@
       "hidden": true,
       "environment": {
         "ARMGCC_DIR": "C:/Users/Luckyw0lf/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi",
-        "SdkRootDirPath": "C:/sdks/sdk_26_03_00_ese_04_frdmmcxa153",
+        "SdkRootDirPath": "c:/MCUX_workspace/sdk_26_03_00_ese_04_frdmmcxa153",
         "MCUX_VENV_PATH": "C:/Users/Luckyw0lf/.mcuxpressotools/.mcux-venv-3.12/Scripts",
         "PATH": "$env{MCUX_VENV_PATH}${pathListSep}$penv{PATH}",
         "POSTPROCESS_UTILITY": "C:/Users/Luckyw0lf/.mcuxpressotools/mcux-fixelf-14.2.2/mcux-fixelf.exe",
@@ -24,7 +24,7 @@
       "hidden": true,
       "environment": {
         "ARMGCC_DIR": "C:/Users/Luckyw0lf/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi",
-        "SdkRootDirPath": "C:/sdks/sdk_26_03_00_ese_04_frdmmcxa153",
+        "SdkRootDirPath": "c:/MCUX_workspace/sdk_26_03_00_ese_04_frdmmcxa153",
         "MCUX_VENV_PATH": "C:/Users/Luckyw0lf/.mcuxpressotools/.mcux-venv-3.12/Scripts",
         "PATH": "$env{MCUX_VENV_PATH}${pathListSep}$penv{PATH}",
         "POSTPROCESS_UTILITY": "C:/Users/Luckyw0lf/.mcuxpressotools/mcux-fixelf-14.2.2/mcux-fixelf.exe",

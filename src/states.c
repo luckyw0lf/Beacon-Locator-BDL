@@ -30,6 +30,7 @@ void updateStateMachine(StateMachine_t *sm){
         printf("EXIT %s\r\n", sm->state->name);
         sm->state->exit(sm);
         sm->state = nextState;
+        sm->isBusy = true;
         printf("ENTER %s\r\n", sm->state->name);
         sm->state->entry(sm);
         printf("MAIN %s\r\n", sm->state->name);

@@ -24,6 +24,10 @@ typedef struct {
 // I think we could have an array that has the size of the frame.
 // every time we process the FIFO buffer, we can itterate with modulo
 // and just rotate it around. then when we need to set the distance we avarage them.
+
+// we put the IbeaconData into a FIFO, so we can process all Ibeacons here while it's scanning
+
+// For setting up we can 
 IbeaconData_t targetBeacon;
 fifo_t rollingScan;
 IbeaconData_t buffer[FRAME_SIZE];
