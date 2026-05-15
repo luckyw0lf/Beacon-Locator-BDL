@@ -7,8 +7,8 @@
   "projectType": "sdk-v2-freestanding",
   "projectName": "BDL-Bluetooth-Locator",
   "sdk": {
-    "version": "26.3.0",
     "path": "C:\\sdks\\sdk_26_03_00_ese_04_frdmmcxa153",
+    "version": "26.3.0",
     "boardId": "frdmmcxa153",
     "deviceId": "MCXA153",
     "coreId": "cm33_core0"

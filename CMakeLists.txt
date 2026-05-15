@@ -32,6 +32,10 @@ mcux_add_source(
             lib/states/state_init.h
             lib/states/state_idle.c
             lib/states/state_idle.h
+            lib/states/state_searching_beacon.c
+            lib/states/state_searching_beacon.h
+            lib/hm10/hm10.c
+            lib/hm10/hm10.h
 )
 
 mcux_add_include(
@@ -42,6 +46,7 @@ mcux_add_include(
              serial
              lib
              lib/states
+             lib/hm10
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
 
