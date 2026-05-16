@@ -3,7 +3,7 @@
 #ifndef STATES_H
 #define STATES_H
 
-#define QUEUE_CAPACITY 10
+#define QUEUE_CAPACITY 8
 
 // this tells the compiler that StateMachine_t will exist in the future.
 typedef struct StateMachine_t StateMachine_t;

@@ -8,7 +8,7 @@ void initStateMachine(StateMachine_t *sm, State_t *firstState){
 
     f_init(&sm->queue, 
               (void*)sm->buffer,            // Point to the internal array
-              16,                           // Max items?
+              8,                           // Max items?
               sizeof(const State_t *));     // Size of one pointer
 
     // Can't print here, serial isn't initialized yet.
