@@ -13,7 +13,7 @@ struct State_t {
     void (*entry)(StateMachine_t *sm);
     void (*main)(StateMachine_t *sm);
     void (*exit)(StateMachine_t *sm);
-    char name[20];
+    const char *name;
 };
 
 struct StateMachine_t {
