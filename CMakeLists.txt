@@ -29,6 +29,8 @@ mcux_add_source(
             lib/lcd/lcd.h
             lib/lpi2c/lpi2c.c
             lib/lpi2c/lpi2c.h
+            lib/mpr121/mpr121.c
+            lib/mpr121/mpr121.h
 
             main.c
             src/states.c
