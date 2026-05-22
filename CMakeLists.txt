@@ -29,6 +29,8 @@ mcux_add_source(
             lib/lcd/lcd.h
             lib/lpi2c/lpi2c.c
             lib/lpi2c/lpi2c.h
+            lib/oled/oled.c
+            lib/oled/oled.h
 
             main.c
             src/states.c
@@ -55,6 +57,7 @@ mcux_add_include(
              lib/serial
              lib/lcd
              lib/lpi2c
+             lib/oled
              src
              src/states
              src/hm10

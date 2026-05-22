@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "lcd.h"
 #include "keypad.h"
+#include "oled.h"
 
 #ifdef DEBUG
 #define TARGETSTR "Debug"
@@ -37,14 +38,22 @@ void init_entry(StateMachine_t *sm){
     // set time for min bootup delay
     now = ms;
 
-    lcd_init();
+  /*  lcd_init();
     lcd_backlight(1);
     lcd_clear();
     lcd_return_home();
     lcd_put("BDL");
     lcd_set_cursor(0,1);
-    lcd_put("beacon finder");
+    lcd_put("beacon finder");*/
 
+    oled_init();
+    oled_clear();
+
+    oled_set_cursor(0, 0);
+    oled_puts("BDL");
+
+    oled_set_cursor(0, 2);
+    oled_puts("beacon finder");
 
     addToQueue(sm, &STATE_BOOT_MENU);
 }
