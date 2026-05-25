@@ -5,15 +5,39 @@
 #include "helperFunctions.h"
 #include "keypad.h"
 #include "mpr121.h"
+#include "states.h"
 
-volatile char pressedKey;
+volatile uint16_t pressedKey;
 volatile char keypadFlag;
+extern uint16_t touch_reg;
+extern uint32_t touch_interrupt_now;
+extern uint32_t ms;
+extern char handle_touch_interrupt;
+extern State_t STATE_BOOT_MENU;
+
+const char* TOUCHPAD_STRINGS[16] = {
+    "TWO",    // (1 << 15)
+    "FIVE",   // (1 << 14)
+    "EIGHT",  // (1 << 13)
+    "ENTER",  // (1 << 12)
+    "ONE",    // (1 << 11)
+    "FOUR",   // (1 << 10)
+    "SEVEN",  // (1 << 9)
+    "LEFT",   // (1 << 8)
+    "UNKNOWN",
+    "UNKNOWN",
+    "UNKNOWN",
+    "UNKNOWN",
+    "THREE",  // (1 << 3)
+    "SIX",    // (1 << 2)
+    "NINE",   // (1 << 1)
+    "RIGHT"   // (1 << 0)
+};
 
 void initKeypad(){
-    // later make code here to setup IRQ with i2c keypad, for now using normal buttons.
-    // I looked at Hugo his code for the button example
    // initialize the keypad
-    mpr121_init();
+   // make sure lpi2c is active
+    mpr121_setup();
 
     keypadFlag = false;
     // set up intterupt pins
@@ -25,6 +49,8 @@ void initKeypad(){
     NVIC_SetPriority(GPIO3_IRQn, 3);
     NVIC_ClearPendingIRQ(GPIO3_IRQn);
     NVIC_EnableIRQ(GPIO3_IRQn);
+    getTouchReg();
+
 }
 
 void GPIO3_IRQHandler(void)
@@ -36,7 +62,34 @@ void GPIO3_IRQHandler(void)
         GPIO3->ISFR[0] = GPIO_ISFR_ISF1(1);
 
         // Handle the event
-       getTouchReg();
-        // printf("keypad status %d\r\n", padStatus);
+        touch_interrupt_now = ms;
+        handle_touch_interrupt = true;
+
+        // read the register, the keypad doesn't continue generating interrupts if the register hasn't been read after interrupt
+        // Maybe in the future set up a queue to read the register multiple timmes
+        // but for now it is good enough.
+        getTouchReg();
     }
+}
+
+void readKeypad(){
+    // read the mpr register
+    getTouchReg();
+
+    // plot the touch reg to keys pressed
+    // crazy logic:
+    if(touch_reg == 0) return;
+
+    // we're going to use a built in function of GCC, Count leading zeros, 
+    // it will give back the position of the MSB
+    pressedKey = __CLZ(touch_reg) - 16;
+    keypadFlag = true;
+
+    printf("proccessing keypress, key: %s \r\n", TOUCHPAD_STRINGS[pressedKey]);
+}
+
+void keypadReInit(StateMachine_t *sm){
+    mpr121_reconfigure();
+    addToQueue(sm, &STATE_BOOT_MENU);
+    sm->isBusy = false;
 }

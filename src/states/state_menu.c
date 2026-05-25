@@ -6,22 +6,27 @@
 #include "lcd.h"
 #include "state_menu.h"
 #include "keypad.h"
+#include "mpr121.h"
 
 // private function prototype
 void printMenu();
 
 extern State_t STATE_ADMIN_MODE;
 extern State_t STATE_INIT;
+extern State_t STATE_RECONFIG_KEYPAD;
 extern char keypadFlag;
-extern char pressedKey;
+extern uint16_t touch_reg;
+extern uint16_t pressedKey;
+
 
 static menuItem_t menuItems[] = {
     {&STATE_ADMIN_MODE, "Admin mode"},
-    {&STATE_INIT, "Re-initialize"}
+    {&STATE_INIT, "Re-initialize"},
+    {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"}
 };
 
-// item counnt - 1
-#define MENU_ITEM_COUNT 2
+// item count
+#define MENU_ITEM_COUNT 3
 
 static unsigned char menuPos;
 
@@ -37,7 +42,6 @@ void menu_main(StateMachine_t *sm){
     if(keypadFlag){
         keypadFlag = false;
 
-        printf("proccessing keypress, key: %d \r\n", pressedKey);
         switch (pressedKey)
         {
         case ENTER:
@@ -45,9 +49,13 @@ void menu_main(StateMachine_t *sm){
             break;
         default:
             break;
-        case DOWN:
+        case RIGHT:
             menuPos = (menuPos+1) % MENU_ITEM_COUNT;
             break;
+        case LEFT:
+            menuPos = (menuPos+MENU_ITEM_COUNT-1) % MENU_ITEM_COUNT;
+            break;
+            
         }
         printMenu();
     }
@@ -56,7 +64,7 @@ void menu_main(StateMachine_t *sm){
 
 void printMenu(){
     lcd_clear();
-    char buffer[16];
+    char buffer[17]; // 17 with null terminator
     snprintf(buffer, sizeof(buffer), "> %s", menuItems[menuPos].name);
     lcd_set_cursor(0,0);
     lcd_put(buffer);

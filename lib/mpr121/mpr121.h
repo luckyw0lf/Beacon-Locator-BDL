@@ -50,6 +50,7 @@
 #define	ATO_CFGT	0x7F
 
 
-void mpr121_init(void);
-uint16_t getTouchReg(void);
+void mpr121_reconfigure();
+void mpr121_setup();
+void getTouchReg();
 #endif

@@ -9,7 +9,7 @@
 #include "states.h"
 #include "state_init.h"
 #include "state_menu.h"
-
+#include "keypad.h"
 // -----------------------------------------------------------------------------
 // Local type definitions
 // -----------------------------------------------------------------------------
@@ -22,6 +22,7 @@
 // -----------------------------------------------------------------------------
 // Local function prototypes
 // -----------------------------------------------------------------------------
+void emptyFunc(StateMachine_t *sm);
 // -----------------------------------------------------------------------------
 // Local variables
 // -----------------------------------------------------------------------------
@@ -32,6 +33,13 @@ static StateMachine_t systemSM;
 State_t STATE_INIT = { &init_entry, &init_main, &init_exit, "INIT" };
 State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
 State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
+
+// for menu
+State_t STATE_RECONFIG_KEYPAD = { &emptyFunc, &keypadReInit, &emptyFunc, "ADMIN_MODE" };
+volatile char handle_touch_interrupt = false;
+volatile uint32_t touch_interrupt_now = 0;
+// also serves for debouncing, initially only needed for a small delay but this works nicely for debouncing too.
+static unsigned char touch_ms_delay = 80;
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // Main application
@@ -41,6 +49,12 @@ int main(void)
 
     while(1)
     {
+        if(handle_touch_interrupt){
+            if(ms - touch_interrupt_now >= touch_ms_delay){
+                readKeypad();
+                handle_touch_interrupt = false;
+            }
+        }
         updateStateMachine(&systemSM);
     }
 }
@@ -51,3 +65,5 @@ void SysTick_Handler(void)
 {
     ms++;
 }
+
+void emptyFunc(StateMachine_t *sm){}
