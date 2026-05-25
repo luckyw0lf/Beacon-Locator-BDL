@@ -45,7 +45,7 @@ void mpr121_reconfigure()
     out = 0x02; lpi2c_write(I2C_ADDRESS, FDL_F, &out, 1);
 
     // Section C - Sets touch and release thresholds for each electrode
-    out = 0x06;
+    out = 0x0C;
     lpi2c_write(I2C_ADDRESS, ELE0_T, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE1_T, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE2_T, &out, 1);
@@ -58,7 +58,7 @@ void mpr121_reconfigure()
     lpi2c_write(I2C_ADDRESS, ELE9_T, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE10_T, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE11_T, &out, 1);
-    out = 0x0A;
+    out = 0x0F;
     lpi2c_write(I2C_ADDRESS, ELE0_R, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE1_R, &out, 1);
     lpi2c_write(I2C_ADDRESS, ELE2_R, &out, 1);

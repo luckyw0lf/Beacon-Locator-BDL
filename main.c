@@ -38,12 +38,13 @@ State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
 State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
 State_t STATE_SEARCHING_BEACON = { &search_entry, &search_main, &search_exit, "SEARCHING_BEACON" };
 
-// for menu
+// For menu
 State_t STATE_RECONFIG_KEYPAD = { &emptyFunc, &keypadReInit, &emptyFunc, "ADMIN_MODE" };
 volatile char handle_touch_interrupt = false;
 volatile uint32_t touch_interrupt_now = 0;
-// also serves for debouncing, initially only needed for a small delay but this works nicely for debouncing too.
-static unsigned char touch_ms_delay = 80;
+// Also serves for debouncing, initially only needed for a small delay but this works nicely for debouncing too.
+// The lower the value the more responsive but more chance on double inputs.
+static unsigned char touch_ms_delay = 20;
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // Main application
