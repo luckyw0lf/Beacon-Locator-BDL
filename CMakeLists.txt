@@ -57,6 +57,7 @@ mcux_add_include(
              lib/serial
              lib/lcd
              lib/lpi2c
+             lib/mpr121
              src
              src/states
              src/hm10

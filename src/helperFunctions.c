@@ -35,7 +35,7 @@ void setUpPin(PORT_Type *port, int pin, unsigned char output, int pin_config){
         gpio = GPIO3;
     }
 
-    port->PCR[pin] |= pin_config | PORT_PCR_LK(1);
+    port->PCR[pin] |= pin_config ;
     if(output){
         gpio->PDDR |= (1<<pin);
     }
