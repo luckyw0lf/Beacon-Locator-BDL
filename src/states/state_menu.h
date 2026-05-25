@@ -5,7 +5,7 @@
 
 typedef struct {
     State_t *selState;
-    char name[14];
+    char name[15];
 } menuItem_t;
 
 void menu_entry(StateMachine_t *sm);

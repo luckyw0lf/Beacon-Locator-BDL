@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "lcd.h"
 #include "keypad.h"
+#include "lpi2c.h"
 
 #ifdef DEBUG
 #define TARGETSTR "Debug"
@@ -14,7 +15,7 @@
 
 extern State_t STATE_BOOT_MENU;
 extern volatile uint32_t ms;
-static uint32_t bootDelay = 2000;
+static uint32_t bootDelay = 1000;
 static uint32_t now;
 
 void init_entry(StateMachine_t *sm){
@@ -25,6 +26,8 @@ void init_entry(StateMachine_t *sm){
     
     printf("ENTER %s\r\n", sm->state->name);
     
+    lpi2c_controller_init();
+
     //initialize keypad
     initKeypad();
 
@@ -49,8 +52,8 @@ void init_entry(StateMachine_t *sm){
     addToQueue(sm, &STATE_BOOT_MENU);
 }
 void init_main(StateMachine_t *sm){
-    // wait 2s for startup screen
-    if(ms - now > bootDelay)
+    // wait 500ms for startup screen and wait for lpi2c
+    if(ms - now > bootDelay && !lpi2c_busy())
         sm->isBusy = false;
 }
 void init_exit(StateMachine_t *sm){
