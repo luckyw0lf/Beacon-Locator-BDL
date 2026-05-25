@@ -31,6 +31,10 @@ mcux_add_source(
             lib/lpi2c/lpi2c.h
             lib/mpr121/mpr121.c
             lib/mpr121/mpr121.h
+            lib/serial2lpuart/lpuart2.c
+            lib/serial2lpuart/lpuart2.h
+            lib/sll/sll.c
+            lib/sll/sll.h
 
             main.c
             src/states.c
@@ -58,6 +62,8 @@ mcux_add_include(
              lib/lcd
              lib/lpi2c
              lib/mpr121
+             lib/serial2lpuart
+             lib/sll
              src
              src/states
              src/hm10

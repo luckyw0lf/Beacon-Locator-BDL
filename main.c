@@ -10,6 +10,9 @@
 #include "state_init.h"
 #include "state_menu.h"
 #include "keypad.h"
+#include "hm10.h"
+#include "state_searching_beacon.h"
+
 // -----------------------------------------------------------------------------
 // Local type definitions
 // -----------------------------------------------------------------------------
@@ -29,7 +32,7 @@ void emptyFunc(StateMachine_t *sm);
 volatile uint32_t ms = 0;
 static volatile uint32_t previous_ms = 0;
 static StateMachine_t systemSM;
-// define states here
+// define states here 
 State_t STATE_INIT = { &init_entry, &init_main, &init_exit, "INIT" };
 State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
 State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
@@ -46,7 +49,13 @@ static unsigned char touch_ms_delay = 80;
 int main(void)
 {   
     initStateMachine(&systemSM, &STATE_INIT);
+    serial_init(115200);
+    hm10_init(9600);
 
+    for(volatile int i =0; i < 5000000; i ++) {}
+
+    initStateMachine(&systemSM, &state_searching_beacon);
+    
     while(1)
     {
         if(handle_touch_interrupt){
