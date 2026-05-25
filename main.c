@@ -36,6 +36,7 @@ static StateMachine_t systemSM;
 State_t STATE_INIT = { &init_entry, &init_main, &init_exit, "INIT" };
 State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
 State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
+State_t STATE_SEARCHING_BEACON = { &search_entry, &search_main, &search_exit, "SEARCHING_BEACON" };
 
 // for menu
 State_t STATE_RECONFIG_KEYPAD = { &emptyFunc, &keypadReInit, &emptyFunc, "ADMIN_MODE" };
@@ -54,7 +55,7 @@ int main(void)
 
     for(volatile int i =0; i < 5000000; i ++) {}
 
-    initStateMachine(&systemSM, &state_searching_beacon);
+    initStateMachine(&systemSM, &STATE_SEARCHING_BEACON);
     
     while(1)
     {

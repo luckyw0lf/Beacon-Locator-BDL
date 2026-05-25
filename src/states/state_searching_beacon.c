@@ -117,9 +117,3 @@ void setupHM10(StateMachine_t *sm)
 {
     f_init(&rollingScan, &buffer, FRAME_SIZE, sizeof(IbeaconData_t));
 }
-
-State_t state_searching_beacon = {
-    .entry = search_entry,
-    .main = search_main,
-    .exit = search_exit,
-    .name = "SEARCHING_BEACON"};
