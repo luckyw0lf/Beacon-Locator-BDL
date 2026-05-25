@@ -4,48 +4,122 @@
 #include "states.h"
 #include <stdio.h>
 #include "fifo.h"
+#include "state_searching_beacon.h"
+#include "hm10.h"
+#include "sll.h"
+#include <string.h>
+#include <stdlib.h>
 
 #define FRAME_SIZE 4
 
-
-typedef struct {
-    char factoryId[8];
-    char uuid[32];
-    char major[4];
-    char minor[4];
-    char power[2];
-    char mac[12];
-    char rssi[4];
-} IbeaconData_t;
-
-// Still need to think about how to do this, We probs want a FIFO for reading the beacon
-// So we can add more IbeaconData_t while we are doing other things since UART takes time.
-// but we also want a rollng frame so we can avarage out scans.
-// I think we could have an array that has the size of the frame.
-// every time we process the FIFO buffer, we can itterate with modulo
-// and just rotate it around. then when we need to set the distance we avarage them.
-
-// we put the IbeaconData into a FIFO, so we can process all Ibeacons here while it's scanning
-
-// For setting up we can 
+// For setting up we can
 IbeaconData_t targetBeacon;
 fifo_t rollingScan;
 IbeaconData_t buffer[FRAME_SIZE];
 
-void search_entry(StateMachine_t *sm){
-}
-void search_main(StateMachine_t *sm){
-    // start reading iBeacon
-    // set busy flag to true
-    // only re-initiate another readout when it has finished reading out everything
-    // set busy flag to false whenever finished reading so new states can be added
-    // thinking of nesting a state machine, so we can 
-    sm->isBusy = false;
-}
-void search_exit(StateMachine_t *sm){
+static node_t *pHead = NULL;
+static node_t *currentNode = NULL;
+static int current_step = 1;
+char id[9] = "4C000215";
 
+bool parse_beacon_string(const char *raw_string, IbeaconData_t *parsed_data)
+{
+    if (strlen(raw_string) < 78)
+    {
+        return false;
+    }
+    strncpy(parsed_data->major, raw_string + 50, 4);
+    parsed_data->major[4] = '\0';
+    strncpy(parsed_data->minor, raw_string + 54, 4);
+    parsed_data->minor[4] = '\0';
+    strncpy(parsed_data->rssi, raw_string + 74, 4);
+    parsed_data->rssi[4] = '\0';
+    strncpy(parsed_data->factoryId, raw_string + 8, 8);
+    parsed_data->factoryId[8] = '\0';
+
+    return true;
 }
 
-void setupHM10(StateMachine_t *sm){
+void search_entry(StateMachine_t *sm)
+{
+    printf("---START SEARCHING FOR IBEACONS---\r\n");
+    f_init(&rollingScan, &buffer, FRAME_SIZE, sizeof(IbeaconData_t));
+
+    addSLL(&pHead, "0B01", "0003", "-59");
+    addSLL(&pHead, "0AEA", "0037", "-59");
+    addSLL(&pHead, "0AEA", "0032", "-59");
+
+    currentNode = pHead;
+
+    hm10_send_command("AT+DISI?");
+
+    sm->isBusy = true;
+}
+
+void search_main(StateMachine_t *sm)
+{
+    static char raw_beacon_string[150];
+
+    if (hm10_read_line(raw_beacon_string, 150) == true)
+    {
+        if (strstr(raw_beacon_string, "OK+DISCE") != NULL)
+        {
+            printf("--- RESTARTING HM-10 ---\r\n");
+
+            hm10_send_command("AT+DISI?");
+        }
+        else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
+        {
+            if (strcmp(targetBeacon.factoryId, id) == 0)
+            {
+                if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
+                {
+                    if (current_step == 1)
+                    {
+                        GPIO3->PSOR = (1 << 15);
+                        for (int i = 0; i < 2000000; i++)
+                        {
+                        }
+                        GPIO3->PCOR = (1 << 15);
+                    }
+                    else if (current_step == 2)
+                    {
+                        GPIO3->PCOR = (1 << 15);
+                    }
+                    else if (current_step == 3)
+                    {
+                        GPIO3->PSOR = (1 << 14);
+                    }
+
+                    currentNode = currentNode->pNextNode;
+                    current_step++;
+
+                    if (currentNode == NULL)
+                    {
+                        printf("you have reached the end of the route");
+                        sm->isBusy = false;
+                    }
+                }
+            }
+        }
+        memset(raw_beacon_string, 0, sizeof(raw_beacon_string));
+    }
+}
+
+void search_exit(StateMachine_t *sm)
+{
+    printf("---STOP SEARCHING FOR IBEACONS---");
+
+    hm10_send_command("AT+SLEEP");
+}
+
+void setupHM10(StateMachine_t *sm)
+{
     f_init(&rollingScan, &buffer, FRAME_SIZE, sizeof(IbeaconData_t));
 }
+
+State_t state_searching_beacon = {
+    .entry = search_entry,
+    .main = search_main,
+    .exit = search_exit,
+    .name = "SEARCHING_BEACON"};
