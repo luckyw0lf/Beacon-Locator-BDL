@@ -14,6 +14,7 @@ void printMenu();
 extern State_t STATE_ADMIN_MODE;
 extern State_t STATE_INIT;
 extern State_t STATE_RECONFIG_KEYPAD;
+extern State_t STATE_SEARCHING_BEACON;
 extern char keypadFlag;
 extern uint16_t touch_reg;
 extern uint16_t pressedKey;
@@ -22,11 +23,12 @@ extern uint16_t pressedKey;
 static menuItem_t menuItems[] = {
     {&STATE_ADMIN_MODE, "Admin mode"},
     {&STATE_INIT, "Re-initialize"},
-    {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"}
+    {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"},
+    {&STATE_SEARCHING_BEACON, "Beacon search"}
 };
 
 // item count
-#define MENU_ITEM_COUNT 3
+#define MENU_ITEM_COUNT 4
 
 static unsigned char menuPos;
 

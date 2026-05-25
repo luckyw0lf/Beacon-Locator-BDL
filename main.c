@@ -47,15 +47,14 @@ static unsigned char touch_ms_delay = 80;
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // Main application
-int main(void)
-{   
+int main(void){   
     initStateMachine(&systemSM, &STATE_INIT);
     serial_init(115200);
     hm10_init(9600);
 
     for(volatile int i =0; i < 5000000; i ++) {}
 
-    initStateMachine(&systemSM, &STATE_SEARCHING_BEACON);
+    initStateMachine(&systemSM, &STATE_INIT);
     
     while(1)
     {
