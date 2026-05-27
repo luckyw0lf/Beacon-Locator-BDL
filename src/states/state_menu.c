@@ -7,6 +7,8 @@
 #include "state_menu.h"
 #include "keypad.h"
 #include "mpr121.h"
+#include "oled.h"
+
 
 // private function prototype
 void printMenu();
@@ -34,8 +36,9 @@ static unsigned char menuPos;
 
 void menu_entry(StateMachine_t *sm){
     // lcd_backlight(0);
-    lcd_return_home();
-    lcd_clear();
+    //lcd_return_home();
+    //lcd_clear();
+    oled_clear();
     menuPos = 0;
     printMenu();
 }
@@ -65,12 +68,22 @@ void menu_main(StateMachine_t *sm){
 }
 
 void printMenu(){
-    lcd_clear();
+    /*lcd_clear();
     char buffer[17]; // 17 with null terminator
     snprintf(buffer, sizeof(buffer), "> %s", menuItems[menuPos].name);
     lcd_set_cursor(0,0);
-    lcd_put(buffer);
+    lcd_put(buffer);*/
+    oled_clear();
+
+    oled_set_cursor(0, 0);
+    oled_puts("MENU");
+
+    char buffer[22];
+    snprintf(buffer, sizeof(buffer), "> %s", menuItems[menuPos].name);
+
+    oled_set_cursor(0, 2);
+    oled_puts(buffer);
 }
 void menu_exit(StateMachine_t *sm){
-    lcd_clear();
+    oled_clear();
 }
