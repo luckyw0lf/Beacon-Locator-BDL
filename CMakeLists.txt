@@ -29,6 +29,8 @@ mcux_add_source(
             lib/lcd/lcd.h
             lib/lpi2c/lpi2c.c
             lib/lpi2c/lpi2c.h
+            lib/oled/oled.c
+            lib/oled/oled.h
             lib/mpr121/mpr121.c
             lib/mpr121/mpr121.h
             lib/serial2lpuart/lpuart2.c
@@ -61,6 +63,7 @@ mcux_add_include(
              lib/serial
              lib/lcd
              lib/lpi2c
+             lib/oled
              lib/mpr121
              lib/serial2lpuart
              lib/sll
