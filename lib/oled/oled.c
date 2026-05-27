@@ -165,6 +165,25 @@ static const uint8_t FONT_X[5] = {0x63, 0x14, 0x08, 0x14, 0x63};
 static const uint8_t FONT_Y[5] = {0x07, 0x08, 0x70, 0x08, 0x07};
 static const uint8_t FONT_Z[5] = {0x61, 0x51, 0x49, 0x45, 0x43};
 
+static const uint8_t FONT_0[5] = {0x3E, 0x51, 0x49, 0x45, 0x3E};
+static const uint8_t FONT_1[5] = {0x00, 0x42, 0x7F, 0x40, 0x00};
+static const uint8_t FONT_2[5] = {0x42, 0x61, 0x51, 0x49, 0x46};
+static const uint8_t FONT_3[5] = {0x21, 0x41, 0x45, 0x4B, 0x31};
+static const uint8_t FONT_4[5] = {0x18, 0x14, 0x12, 0x7F, 0x10};
+static const uint8_t FONT_5[5] = {0x27, 0x45, 0x45, 0x45, 0x39};
+static const uint8_t FONT_6[5] = {0x3C, 0x4A, 0x49, 0x49, 0x30};
+static const uint8_t FONT_7[5] = {0x01, 0x71, 0x09, 0x05, 0x03};
+static const uint8_t FONT_8[5] = {0x36, 0x49, 0x49, 0x49, 0x36};
+static const uint8_t FONT_9[5] = {0x06, 0x49, 0x49, 0x29, 0x1E};
+
+static const uint8_t FONT_COLON[5]   = {0x00, 0x36, 0x36, 0x00, 0x00};
+static const uint8_t FONT_MINUS[5]   = {0x08, 0x08, 0x08, 0x08, 0x08};
+static const uint8_t FONT_GT[5]      = {0x41, 0x22, 0x14, 0x08, 0x00};
+static const uint8_t FONT_AMP[5]     = {0x36, 0x49, 0x55, 0x22, 0x50};
+static const uint8_t FONT_SLASH[5]   = {0x01, 0x02, 0x04, 0x08, 0x10};
+static const uint8_t FONT_DOT[5]     = {0x00, 0x60, 0x60, 0x00, 0x00};
+static const uint8_t FONT_QUESTION[5] = {0x02, 0x01, 0x51, 0x09, 0x06};
+
 static const uint8_t *oled_get_glyph(char c)
 {
     if(c >= 'a' && c <= 'z')
@@ -200,6 +219,25 @@ static const uint8_t *oled_get_glyph(char c)
         case 'X': return FONT_X;
         case 'Y': return FONT_Y;
         case 'Z': return FONT_Z;
+
+        case '0': return FONT_0;
+        case '1': return FONT_1;
+        case '2': return FONT_2;
+        case '3': return FONT_3;
+        case '4': return FONT_4;
+        case '5': return FONT_5;
+        case '6': return FONT_6;
+        case '7': return FONT_7;
+        case '8': return FONT_8;
+        case '9': return FONT_9;
+        
+        case '?': return FONT_QUESTION;
+        case ':': return FONT_COLON;
+        case '-': return FONT_MINUS;
+        case '>': return FONT_GT;
+        case '&': return FONT_AMP;
+        case '/': return FONT_SLASH;
+        case '.': return FONT_DOT;
         case ' ': return FONT_SPACE;
         default:  return FONT_SPACE;
     }
