@@ -1,0 +1,51 @@
+@startuml
+title Mission State to Navigation State Sequence
+
+actor Player
+participant "Mission State\nMATERIAL_QUESTION" as Mission
+participant "StateMachine" as SM
+participant "Navigation State" as Nav
+participant "Beacon Module" as Beacon
+participant "OLED Display" as OLED
+participant "Keypad/Input" as Keypad
+
+Player -> Keypad : enters answer
+Keypad --> Mission : input submitted
+
+Mission -> Mission : validate answer
+
+alt answer is correct
+    Mission -> Nav : navigation_set_route(\nROUTE_MATERIAL_QUESTION_TO_COLLECTION,\nSTATE_MATERIAL_COLLECTION)
+    Mission -> SM : addToQueue(STATE_NAVIGATION)
+    Mission -> SM : sm->isBusy = false
+
+    SM -> Mission : exit()
+    SM -> Nav : entry()
+
+    Nav -> OLED : show "Find materials"
+    Nav -> Beacon : start scan / read scan results
+
+    loop navigation loop
+        Beacon --> Nav : BeaconScan_t {id, rssi, valid}
+        Nav -> Nav : look up beacon ID\nin active RouteProfile
+        Nav -> Nav : calculate averaged RSSI
+        Nav -> Nav : update bestRssi if stronger
+        Nav -> OLED : show feedback\nSearching / On route /\nGetting closer /\nGetting further /\nWrong direction
+    end
+
+    Nav -> OLED : show "Location found\nPress ENTER"
+    Player -> Keypad : presses ENTER
+    Keypad --> Nav : ENTER event
+
+    Nav -> SM : addToQueue(STATE_MATERIAL_COLLECTION)
+    Nav -> SM : sm->isBusy = false
+
+    SM -> Nav : exit()
+    SM -> Mission : enter STATE_MATERIAL_COLLECTION
+
+else answer is wrong
+    Mission -> OLED : show "Try again"
+    Mission -> Mission : stay in same state
+end
+
+@enduml
