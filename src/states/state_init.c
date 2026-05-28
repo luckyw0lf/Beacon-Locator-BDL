@@ -30,6 +30,9 @@ void init_entry(StateMachine_t *sm){
     
     lpi2c_controller_init();
 
+    //initialize oled
+    oled_init();
+
     //initialize keypad
     initKeypad();
 
@@ -41,19 +44,14 @@ void init_entry(StateMachine_t *sm){
 
     // set time for min bootup delay
     now = ms;
+    
+    oled_set_cursor(0, 0);
+    oled_puts("BDL");
 
-    /*lcd_init();
-    lcd_backlight(1);
-    lcd_clear();
-    lcd_return_home();
-    lcd_put("BDL");
-    lcd_set_cursor(0,1);
-    lcd_put("beacon finder");*/
-    oled_init();
-    oled_clear();
+    oled_set_cursor(0, 2);
+    oled_puts("BEACON FINDER");
 
-    oled_set_cursor(0, 4);
-    oled_puts("3>456789 : -&/.?");
+    
 
 
     addToQueue(sm, &STATE_BOOT_MENU);

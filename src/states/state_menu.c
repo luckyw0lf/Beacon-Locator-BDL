@@ -35,9 +35,7 @@ static menuItem_t menuItems[] = {
 static unsigned char menuPos;
 
 void menu_entry(StateMachine_t *sm){
-    // lcd_backlight(0);
-    //lcd_return_home();
-    //lcd_clear();
+    
     oled_clear();
     menuPos = 0;
     printMenu();
@@ -68,11 +66,7 @@ void menu_main(StateMachine_t *sm){
 }
 
 void printMenu(){
-    /*lcd_clear();
-    char buffer[17]; // 17 with null terminator
-    snprintf(buffer, sizeof(buffer), "> %s", menuItems[menuPos].name);
-    lcd_set_cursor(0,0);
-    lcd_put(buffer);*/
+    
     oled_clear();
 
     oled_set_cursor(0, 0);

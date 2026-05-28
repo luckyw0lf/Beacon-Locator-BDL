@@ -9,6 +9,7 @@
 #include "sll.h"
 #include <string.h>
 #include <stdlib.h>
+#include <oled.h>
 
 #define FRAME_SIZE 4
 
@@ -43,6 +44,19 @@ bool parse_beacon_string(const char *raw_string, IbeaconData_t *parsed_data)
 void search_entry(StateMachine_t *sm)
 {
     printf("---START SEARCHING FOR IBEACONS---\r\n");
+    
+    printf("major: %s\r\n", targetBeacon.major);
+    printf("minor: %s\r\n", targetBeacon.minor);
+    printf("rssi : %s\r\n", targetBeacon.rssi);
+    printf("step : %d\r\n", current_step);
+
+    oled_clear();
+    oled_set_cursor(0, 0);
+    oled_puts("BEACON SEARCH");
+
+    oled_set_cursor(0, 2);
+    oled_puts("SCANNING...");
+    
     f_init(&rollingScan, &buffer, FRAME_SIZE, sizeof(IbeaconData_t));
 
     addSLL(&pHead, "0B01", "0003", "-59");
@@ -69,11 +83,26 @@ void search_main(StateMachine_t *sm)
             hm10_send_command("AT+DISI?");
         }
         else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
-        {
+        {   
+             printf("PARSED RAW: %s\r\n", raw_beacon_string);
+             printf("factoryId: %s\r\n", targetBeacon.factoryId);
+             printf("major: %s\r\n", targetBeacon.major);
+             printf("minor: %s\r\n", targetBeacon.minor);
+             printf("rssi : %s\r\n", targetBeacon.rssi);
+
+
             if (strcmp(targetBeacon.factoryId, id) == 0)
-            {
+            {  
+                
                 if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
                 {
+                 oled_clear();
+                 oled_set_cursor(0, 0);
+                 oled_puts("SIGNAL FOUND");
+
+                 oled_set_cursor(0, 2);
+                 oled_puts("KEEP GOING");
+
                     if (current_step == 1)
                     {
                         GPIO3->PSOR = (1 << 15);
