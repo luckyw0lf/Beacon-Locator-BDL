@@ -44,12 +44,8 @@ bool parse_beacon_string(const char *raw_string, IbeaconData_t *parsed_data)
 void search_entry(StateMachine_t *sm)
 {
     printf("---START SEARCHING FOR IBEACONS---\r\n");
-    
-    printf("major: %s\r\n", targetBeacon.major);
-    printf("minor: %s\r\n", targetBeacon.minor);
-    printf("rssi : %s\r\n", targetBeacon.rssi);
-    printf("step : %d\r\n", current_step);
-
+  
+   
     oled_clear();
     oled_set_cursor(0, 0);
     oled_puts("BEACON SEARCH");
@@ -84,18 +80,19 @@ void search_main(StateMachine_t *sm)
         }
         else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
         {   
-             printf("PARSED RAW: %s\r\n", raw_beacon_string);
-             printf("factoryId: %s\r\n", targetBeacon.factoryId);
-             printf("major: %s\r\n", targetBeacon.major);
-             printf("minor: %s\r\n", targetBeacon.minor);
-             printf("rssi : %s\r\n", targetBeacon.rssi);
-
-
+           
             if (strcmp(targetBeacon.factoryId, id) == 0)
             {  
+                printf("IBEACON RAW: %s\r\n", raw_beacon_string);
+                printf("major: %s\r\n", targetBeacon.major);
+                printf("minor: %s\r\n", targetBeacon.minor);
+                printf("rssi : %s\r\n", targetBeacon.rssi);
+                printf("step : %d\r\n", current_step);
                 
                 if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
                 {
+                 printf("MATCH FOUND\r\n");
+                 
                  oled_clear();
                  oled_set_cursor(0, 0);
                  oled_puts("SIGNAL FOUND");
