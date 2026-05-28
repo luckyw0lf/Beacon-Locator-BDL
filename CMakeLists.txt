@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.22.0)
+if(NOT DEFINED board OR "${board}" STREQUAL "")
+    set(board frdmmcxa153 CACHE STRING "Target board" FORCE)
+endif()
 
 cmake_path(APPEND conf_file_path ${CMAKE_CURRENT_LIST_DIR} ${board} prj.conf)
 set(CONF_FILE ${conf_file_path} ${CONF_FILE})
@@ -45,6 +48,8 @@ mcux_add_source(
             src/states/state_init.h
             src/states/state_searching_beacon.c
             src/states/state_searching_beacon.h
+            src/beacon/beacon_parser.c
+            src/beacon/beacon_parser.h
             src/states/state_menu.c
             src/states/state_menu.h
             src/hm10/hm10.c
@@ -69,7 +74,9 @@ mcux_add_include(
              lib/sll
              src
              src/states
+             src/beacon
              src/hm10
+             
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
 

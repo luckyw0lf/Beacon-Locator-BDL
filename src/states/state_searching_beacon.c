@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <oled.h>
+#include "beacon_parser.h"
 
 #define FRAME_SIZE 4
 
@@ -23,23 +24,6 @@ static node_t *currentNode = NULL;
 static int current_step = 1;
 char id[9] = "4C000215";
 
-bool parse_beacon_string(const char *raw_string, IbeaconData_t *parsed_data)
-{
-    if (strlen(raw_string) < 78)
-    {
-        return false;
-    }
-    strncpy(parsed_data->major, raw_string + 50, 4);
-    parsed_data->major[4] = '\0';
-    strncpy(parsed_data->minor, raw_string + 54, 4);
-    parsed_data->minor[4] = '\0';
-    strncpy(parsed_data->rssi, raw_string + 74, 4);
-    parsed_data->rssi[4] = '\0';
-    strncpy(parsed_data->factoryId, raw_string + 8, 8);
-    parsed_data->factoryId[8] = '\0';
-
-    return true;
-}
 
 void search_entry(StateMachine_t *sm)
 {
