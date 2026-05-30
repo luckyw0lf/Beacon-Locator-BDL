@@ -12,6 +12,7 @@
 #include "keypad.h"
 #include "hm10.h"
 #include "state_searching_beacon.h"
+#include "oled.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions

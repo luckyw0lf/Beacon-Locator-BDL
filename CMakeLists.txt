@@ -76,7 +76,9 @@ mcux_add_include(
              lib/mpr121
              lib/serial2lpuart
              lib/sll
+             lib/system_timer
              src
+             src/game_logger
              src/states
              src/beacon
              src/hm10

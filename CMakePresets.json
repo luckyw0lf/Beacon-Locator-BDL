@@ -8,7 +8,7 @@
       "name": "debug",
       "displayName": "debug",
       "generator": "Ninja",
-      "binaryDir": "${fileDir}//${presetName}",
+      "binaryDir": "${fileDir}/${presetName}",
       "toolchainFile": "$env{SdkRootDirPath}/mcuxsdk/cmake/toolchain/armgcc.cmake",
       "inherits": "debug-env",
       "cacheVariables": {
@@ -23,15 +23,14 @@
         "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "$env{binaryDir}",
         "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "$env{binaryDir}",
         "WEST": "TRUE",
-        "board": "frdmmcxa153",
-        "PrjRootDirPath": "${fileDir}//"
+        "board": ""
       }
     },
     {
       "name": "release",
       "displayName": "release",
       "generator": "Ninja",
-      "binaryDir": "${fileDir}//${presetName}",
+      "binaryDir": "${fileDir}/${presetName}",
       "toolchainFile": "$env{SdkRootDirPath}/mcuxsdk/cmake/toolchain/armgcc.cmake",
       "inherits": "release-env",
       "cacheVariables": {
@@ -46,8 +45,7 @@
         "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "$env{binaryDir}",
         "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "$env{binaryDir}",
         "WEST": "TRUE",
-        "board": "frdmmcxa153",
-        "PrjRootDirPath": "${fileDir}//"
+        "board": ""
       }
     }
   ],

@@ -1,4 +1,4 @@
-#ifdef GAME_LOGGER_H
+#ifndef GAME_LOGGER_H
 #define GAME_LOGGER_H
 
 #include <stdint.h>

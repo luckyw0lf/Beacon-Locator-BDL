@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "system_timer.h"
 
-volatile uint32_t ms = 0;
+volatile static uint32_t ms_cnt = 0;
 
 void SysTick_Init(void)
 {
@@ -12,10 +12,10 @@ void SysTick_Init(void)
 
 void Systick_Handler(void)
 {
-    ms++;
+    ms_cnt++;
 }
 
 uint32_t get_system_time(void)
 {
-    return ms;
+    return ms_cnt;
 }
