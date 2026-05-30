@@ -37,7 +37,7 @@ void navigation_entry(StateMachine_t *sm)
 
     if (activeProfile != 0)
     {
-        printf("%s\r\n", activeProfile->name);
+        printf("%s\r\n", activeProfile->displayName);
     }
     else
     {
@@ -52,7 +52,7 @@ void navigation_entry(StateMachine_t *sm)
 
     if (activeProfile != 0)
     {
-        oled_puts(activeProfile->name);
+        oled_puts(activeProfile->displayName);
     }
     else
     {

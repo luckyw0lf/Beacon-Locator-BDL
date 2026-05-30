@@ -55,7 +55,7 @@ typedef struct
 typedef struct
 {
     RouteId_t id;
-    const char *name;
+    const char *displayName;
     const RouteBeaconRule_t *rules;
     uint8_t ruleCount;
 } RouteProfile_t;

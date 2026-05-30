@@ -72,7 +72,8 @@ mcux_add_source(
             src/keypad.h
             src/game_logger/game_logger.h
             src/game_logger/game_logger.c
-            
+            src/game_logger/fsl_flashiap.c
+            src/game_logger/fsl_flashiap.h
 )
 
 mcux_add_include(
@@ -88,6 +89,7 @@ mcux_add_include(
              lib/serial2lpuart
              lib/sll
              lib/system_timer
+             
              src
              src/game_logger
              src/states
