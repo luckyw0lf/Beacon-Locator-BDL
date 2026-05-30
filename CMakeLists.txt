@@ -70,8 +70,7 @@ mcux_add_source(
             src/helperFunctions.h
             src/keypad.c
             src/keypad.h
-            src/game_logger/game_logger.h
-            src/game_logger/game_logger.c
+           
             
 )
 
@@ -89,7 +88,7 @@ mcux_add_include(
              lib/sll
              lib/system_timer
              src
-             src/game_logger
+          
              src/states
              src/states/state_game_missions
              src/beacon
