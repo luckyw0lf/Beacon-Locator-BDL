@@ -157,7 +157,7 @@ int lpuart2_getchar(void)
 
     // Wait for data.
     // If a blocking wait should not be used, call the function serial_rxcnt()
-    // first to make sure data is available.
+    // first to make sure datax is available.
     while(!f_pop(&rx, &c))
     {}
 

@@ -40,6 +40,8 @@ mcux_add_source(
             lib/serial2lpuart/lpuart2.h
             lib/sll/sll.c
             lib/sll/sll.h
+            lib/system_timer/system_timer.c
+            lib/system_timer/system_timer.h
 
             main.c
             src/states.c
@@ -58,6 +60,8 @@ mcux_add_source(
             src/helperFunctions.h
             src/keypad.c
             src/keypad.h
+            src/game_logger/game_logger.h
+            src/game_logger/game_logger.c
 )
 
 mcux_add_include(
@@ -76,7 +80,6 @@ mcux_add_include(
              src/states
              src/beacon
              src/hm10
-             
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
 

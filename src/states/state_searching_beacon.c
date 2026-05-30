@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <oled.h>
 #include "beacon_parser.h"
+#include "system_timer.h"
+#include "game_logger.h"
 
 #define FRAME_SIZE 4
 
@@ -23,6 +25,7 @@ static node_t *pHead = NULL;
 static node_t *currentNode = NULL;
 static int current_step = 1;
 char id[9] = "4C000215";
+extern uint32_t current_startTime;
 
 
 void search_entry(StateMachine_t *sm)
@@ -88,7 +91,7 @@ void search_main(StateMachine_t *sm)
                     {
                         GPIO3->PSOR = (1 << 15);
                         for (int i = 0; i < 2000000; i++)
-                        {
+                        {   
                         }
                         GPIO3->PCOR = (1 << 15);
                     }
