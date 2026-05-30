@@ -11,13 +11,10 @@
 #include <stdlib.h>
 #include <oled.h>
 #include "beacon_parser.h"
-<<<<<<< HEAD
 #include "system_timer.h"
 #include "game_logger.h"
-=======
 #include "routes.h"
 
->>>>>>> f5cbbf2 (Add beacon route rules)
 
 #define FRAME_SIZE 4
 

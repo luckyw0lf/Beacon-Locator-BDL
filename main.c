@@ -13,6 +13,8 @@
 #include "hm10.h"
 #include "state_searching_beacon.h"
 #include "oled.h"
+#include "state_navigation.h"
+#include "state_game_missions.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -39,6 +41,48 @@ State_t STATE_BOOT_MENU = { &menu_entry, &menu_main, &menu_exit, "BOOT_MENU" };
 State_t STATE_ADMIN_MODE = { &menu_entry, &menu_main, &menu_exit, "ADMIN_MODE" };
 State_t STATE_SEARCHING_BEACON = { &search_entry, &search_main, &search_exit, "SEARCHING_BEACON" };
 
+//in game states
+State_t STATE_NAVIGATION = {
+    &navigation_entry,
+    &navigation_main,
+    &navigation_exit,
+    "NAVIGATION"
+};
+
+State_t STATE_EXPERIENCE_MISSION = {
+    &experience_entry,
+    &experience_main,
+    &experience_exit,
+    "EXPERIENCE_MISSION"
+};
+
+State_t STATE_MATERIAL_QUESTION = {
+    &material_question_entry,
+    &material_question_main,
+    &material_question_exit,
+    "MATERIAL_QUESTION"
+};
+
+State_t STATE_MATERIAL_COLLECTION = {
+    &material_collection_entry,
+    &material_collection_main,
+    &material_collection_exit,
+    "MATERIAL_COLLECTION"
+};
+
+State_t STATE_BUILD_TEST = {
+    &build_test_entry,
+    &build_test_main,
+    &build_test_exit,
+    "BUILD_TEST"
+};
+
+State_t STATE_FINISH = {
+    &finish_entry,
+    &finish_main,
+    &finish_exit,
+    "FINISH"
+};
 // For menu
 State_t STATE_RECONFIG_KEYPAD = { &emptyFunc, &keypadReInit, &emptyFunc, "ADMIN_MODE" };
 volatile char handle_touch_interrupt = false;

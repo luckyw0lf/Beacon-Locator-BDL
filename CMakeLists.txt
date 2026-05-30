@@ -50,10 +50,20 @@ mcux_add_source(
             src/states/state_init.h
             src/states/state_searching_beacon.c
             src/states/state_searching_beacon.h
-            src/beacon/beacon_parser.c
-            src/beacon/beacon_parser.h
+            src/states/state_navigation.c
+            src/states/state_navigation.h
+            src/states/state_game_missions/state_game_missions.h
+            src/states/state_game_missions/state_experience_mission.c
+            src/states/state_game_missions/state_material_question.c
+            src/states/state_game_missions/state_material_collection.c
+            src/states/state_game_missions/state_build_test.c
+            src/states/state_game_missions/state_finish.c
             src/states/state_menu.c
             src/states/state_menu.h
+            src/beacon/beacon_parser.c
+            src/beacon/beacon_parser.h
+            src/navigation/routes.c
+            src/navigation/routes.h
             src/hm10/hm10.c
             src/hm10/hm10.h
             src/helperFunctions.c
@@ -62,6 +72,7 @@ mcux_add_source(
             src/keypad.h
             src/game_logger/game_logger.h
             src/game_logger/game_logger.c
+            
 )
 
 mcux_add_include(
@@ -80,7 +91,9 @@ mcux_add_include(
              src
              src/game_logger
              src/states
+             src/states/state_game_missions
              src/beacon
+             src/navigation
              src/hm10
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
