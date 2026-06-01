@@ -60,6 +60,8 @@ mcux_add_source(
             src/states/state_game_missions/state_finish.c
             src/states/state_menu.c
             src/states/state_menu.h
+            src/states/state_game_intro.c
+            src/states/state_game_intro.h
             src/beacon/beacon_parser.c
             src/beacon/beacon_parser.h
             src/navigation/routes.c

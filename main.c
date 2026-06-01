@@ -15,6 +15,7 @@
 #include "oled.h"
 #include "state_navigation.h"
 #include "state_game_missions.h"
+#include "state_game_intro.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -47,6 +48,13 @@ State_t STATE_NAVIGATION = {
     &navigation_main,
     &navigation_exit,
     "NAVIGATION"
+};
+
+State_t STATE_GAME_INTRO = {
+    &game_intro_entry,
+    &game_intro_main,
+    &game_intro_exit,
+    "GAME_INTRO"
 };
 
 State_t STATE_EXPERIENCE_MISSION = {

@@ -18,13 +18,14 @@ extern State_t STATE_INIT;
 extern State_t STATE_RECONFIG_KEYPAD;
 extern State_t STATE_SEARCHING_BEACON;
 extern State_t STATE_NAVIGATION;
+extern State_t STATE_GAME_INTRO;
 extern char keypadFlag;
 extern uint16_t touch_reg;
 extern uint16_t pressedKey;
 
 
 static menuItem_t menuItems[] = {
-    {&STATE_NAVIGATION, "Start Game"},   
+    {&STATE_GAME_INTRO, "Start Game"}, 
     {&STATE_ADMIN_MODE, "Admin mode"},
     {&STATE_INIT, "Re-initialize"},
     {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"},
