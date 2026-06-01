@@ -5,19 +5,19 @@
 
 typedef enum
 {
-    BEACON_B01,
-    BEACON_B02,
-    BEACON_B03,
-    BEACON_B04,
-    BEACON_B05,
-    BEACON_B06,
-    BEACON_B07,
-    BEACON_B08,
-    BEACON_B09,
-    BEACON_B10,
+    BEACON_B01,   // minor 0001
+    BEACON_B02,   // minor 0002
+    BEACON_B03,   // minor 0003
+    BEACON_B04,   // minor 0004
+    BEACON_B05,   // minor 0005
+    BEACON_B06,   // minor 0006
+    BEACON_B07,   // minor 0007
+    BEACON_B08,   // minor 0008
+    BEACON_B09,   // minor 0009
+    BEACON_B10,   // minor 000A
     BEACON_UNKNOWN
 } BeaconId_t;
-// Ignore still included in case of we would like deliberatly ignore a beacon.We dont have to use it.
+
 typedef enum
 {
     BEACON_ROLE_IGNORE,
@@ -33,7 +33,6 @@ typedef enum
     ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION,
     ROUTE_MATERIAL_QUESTION_TO_COLLECTION,
     ROUTE_COLLECTION_TO_BUILD_TEST,
-    ROUTE_BUILD_TEST_TO_FINISH,
     ROUTE_UNKNOWN
 } RouteId_t;
 
@@ -50,12 +49,21 @@ typedef struct
     BeaconId_t beaconId;
     BeaconRole_t role;
     int rssiThreshold;
+
+    const char *line1;
+    const char *line2;
+    const char *line3;
 } RouteBeaconRule_t;
 
 typedef struct
 {
     RouteId_t id;
     const char *name;
+
+    const char *targetLine1;
+    const char *targetLine2;
+    const char *targetLine3;
+
     const RouteBeaconRule_t *rules;
     uint8_t ruleCount;
 } RouteProfile_t;

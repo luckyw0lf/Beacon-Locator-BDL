@@ -4,176 +4,134 @@
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
 /*
-  Route and beacon configuration
- 
-  This file separates two concepts:
- 
-  1. Physical beacon identity
-  2. Beacon meaning inside a route
- 
-  A physical beacon is identified by its iBeacon major/minor values.
-  In the code, we give each physical beacon a stable internal ID:
- 
-      BEACON_B01
-      BEACON_B02
-      BEACON_B03
- 
-  Example:
- 
-      BEACON_B01 = major 0B01, minor 0003
- 
-  These values come from the actual beacon configuration or from
-  scanning the beacon with the HM-10 module.
- 
-  A route profile does not define what a beacon physically is.
-  Instead, it defines what that beacon means during one specific route.
- 
-  Example:
-
-      In route A:
-          B01 = TARGET
-          B02 = PASS_BY
- 
-      In route B:
-          B01 = PASS_BY
-          B02 = TARGET
- 
-  
-  The same physical beacon can have a different role depending on the
-  active route.
- */
-
-
-
-/*
-  Beacon registry
- 
- 
-  This table defines the physical beacons.
- 
-  The label B01/B02/B03 is our internal name.
-  The major/minor values are the real iBeacon identifiers.
- 
-  If the beacon configuration changes, update the major/minor values here.
-  The route profiles can stay the same as long as B01, B02, B03 still
-  represent the same physical locations.
+ * Beacon registry
+ *
+ * Physical beacon identity is separated from route meaning.
+ *
+ * All beacons use major 0B01.
+ * The minor value identifies the physical beacon location.
+ *
+ * B01 = minor 0001
+ * B02 = minor 0002
+ * B03 = minor 0003
+ * B04 = minor 0004
+ * B05 = minor 0005
+ * B06 = minor 0006
+ * B07 = minor 0007
+ * B08 = minor 0008
+ * B09 = minor 0009
+ * B10 = minor 000A
  */
 static const BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0B01", "0003", "B01"},
-    {BEACON_B02, "0AEA", "0037", "B02"},
-    {BEACON_B03, "0AEA", "0032", "B03"},
-
-    /*
-      Placeholder beacons.
-     
-     */
-    {BEACON_B04, "0000", "0000", "B04"},
-    {BEACON_B05, "0000", "0000", "B05"},
-    {BEACON_B06, "0000", "0000", "B06"},
-    {BEACON_B07, "0000", "0000", "B07"},
-    {BEACON_B08, "0000", "0000", "B08"},
-    {BEACON_B09, "0000", "0000", "B09"},
-    {BEACON_B10, "0000", "0000", "B10"}
+    {BEACON_B01, "0B01", "0001", "B01"},
+    {BEACON_B02, "0B01", "0002", "B02"},
+    {BEACON_B03, "0B01", "0003", "B03"},
+    {BEACON_B04, "0B01", "0004", "B04"},
+    {BEACON_B05, "0B01", "0005", "B05"},
+    {BEACON_B06, "0B01", "0006", "B06"},
+    {BEACON_B07, "0B01", "0007", "B07"},
+    {BEACON_B08, "0B01", "0008", "B08"},
+    {BEACON_B09, "0B01", "0009", "B09"},
+    {BEACON_B10, "0B01", "000A", "B10"}
 };
 
 /*
-  Route rules
- 
- 
-  A route rule defines what a beacon means in a specific route.
- 
-  beaconId:
-      Which physical beacon this rule is about.
- 
-  role:
-      What the beacon means during this route.
- 
-  rssiThreshold:
-      How strong the signal should be before we consider this rule relevant.
- 
-  RSSI is normally negative:
- 
-      -90 = weak / far
-      -70 = closer
-      -55 = strong / near
- 
-  These threshold values are starting values and should be tested in the
-  real environment.
+ * Route 1:
+ * Start 0001 -> target 0006
+ *
+ * 0002, 0003 = pass-by
+ * 0004 = turn left from corridor when close enough
+ * 0005 = approach
+ * 0006 = target room
  */
-
 static const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B01, BEACON_ROLE_TARGET, -65},
-    {BEACON_B02, BEACON_ROLE_IGNORE, -75},
-    {BEACON_B03, BEACON_ROLE_IGNORE, -75}
-};
-
-static const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY, -75},
-    {BEACON_B02, BEACON_ROLE_TARGET, -65},
-    {BEACON_B03, BEACON_ROLE_WRONG_WAY, -75}
-};
-
-static const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
-    {BEACON_B01, BEACON_ROLE_IGNORE, -75},
-    {BEACON_B02, BEACON_ROLE_PASS_BY, -75},
-    {BEACON_B03, BEACON_ROLE_TARGET, -65}
-};
-
-static const RouteBeaconRule_t collectionToBuildTestRules[] = {
-    {BEACON_B01, BEACON_ROLE_WRONG_WAY, -75},
-    {BEACON_B02, BEACON_ROLE_PASS_BY, -75},
-    {BEACON_B03, BEACON_ROLE_TARGET, -65}
-};
-
-static const RouteBeaconRule_t buildTestToFinishRules[] = {
-    {BEACON_B01, BEACON_ROLE_IGNORE, -75},
-    {BEACON_B02, BEACON_ROLE_IGNORE, -75},
-    {BEACON_B03, BEACON_ROLE_TARGET, -65}
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
+    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
+    {BEACON_B04, BEACON_ROLE_PASS_BY,  -65, "Turn left", "From corridor", ""},
+    {BEACON_B05, BEACON_ROLE_APPROACH, -70, "You are close", "Keep going", ""},
+    {BEACON_B06, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
 };
 
 /*
- Route profiles
- 
-  A RouteProfile groups the rules for one route.
- 
-  The navigation state will use the active RouteProfile to interpret
-  detected beacons.
- 
-  The navigation state should not hardcode beacon meanings.
-  It should ask this module:
- 
-      "For the active route, what does this beacon mean?"
+ * Route 2:
+ * From room 0006 -> target 0003
+ *
+ * 0005 and 0004 are on the way back.
+ * 0003 is the target room.
  */
+static const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
+    {BEACON_B05, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
+    {BEACON_B04, BEACON_ROLE_APPROACH, -70, "You are close", "Keep going", ""},
+    {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Question room", "Reached", "Press ENTER"}
+};
+
+/*
+ * Route 3:
+ * From room 0003 -> target 000A
+ *
+ * 0004, 0007, 0008, 0009 are on the route.
+ * 0008 gives a turn-left instruction.
+ * 0009 confirms the correct direction.
+ * 000A is the target room.
+ */
+static const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
+    {BEACON_B04, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
+    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
+    {BEACON_B08, BEACON_ROLE_PASS_BY, -65, "Turn left", "From corridor", ""},
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -65, "Right track", "Keep going", ""},
+    {BEACON_B10, BEACON_ROLE_TARGET,  -65, "Material room", "Reached", "Press ENTER"}
+};
+
+/*
+ * Route 4:
+ * From room 000A -> target 0008
+ *
+ * 0009 is a pass-by beacon.
+ * 0007 gives the final turn-left hint.
+ * 0008 is  the final target.
+ */
+static const RouteBeaconRule_t collectionToBuildTestRules[] = {
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
+    {BEACON_B07, BEACON_ROLE_PASS_BY, -65, "Turn left", "Room is nearby", ""},
+    {BEACON_B08, BEACON_ROLE_TARGET,  -65, "Final room", "Reached", "Press ENTER"}
+};
+
 static const RouteProfile_t routeProfiles[] = {
     {
         ROUTE_START_TO_EXPERIENCE,
-        "Start to Experience",
+        "Start to Experience Room",
+        "Target:",
+        "Experience room",
+        "Follow the route",
         startToExperienceRules,
         ARRAY_COUNT(startToExperienceRules)
     },
     {
         ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION,
-        "Experience to Material Question",
+        "Experience Room to Question Room",
+        "Target:",
+        "Question room",
+        "Follow the route",
         experienceToMaterialQuestionRules,
         ARRAY_COUNT(experienceToMaterialQuestionRules)
     },
     {
         ROUTE_MATERIAL_QUESTION_TO_COLLECTION,
-        "Material Question to Collection",
+        "Question Room to Material Room",
+        "Target:",
+        "Material room",
+        "Follow the route",
         materialQuestionToCollectionRules,
         ARRAY_COUNT(materialQuestionToCollectionRules)
     },
     {
         ROUTE_COLLECTION_TO_BUILD_TEST,
-        "Collection to Build Test",
+        "Material Room to Final Room",
+        "Target:",
+        "Final room",
+        "Follow the route",
         collectionToBuildTestRules,
         ARRAY_COUNT(collectionToBuildTestRules)
-    },
-    {
-        ROUTE_BUILD_TEST_TO_FINISH,
-        "Build Test to Finish",
-        buildTestToFinishRules,
-        ARRAY_COUNT(buildTestToFinishRules)
     }
 };
 
