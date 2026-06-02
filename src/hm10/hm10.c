@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "hm10.h"
 #include "lpuart2.h"
-#include "sll.h"
 #include "serial.h"
 #include <stdbool.h>
 #include <string.h>

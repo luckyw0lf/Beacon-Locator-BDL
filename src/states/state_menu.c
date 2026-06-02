@@ -28,11 +28,10 @@ static menuItem_t menuItems[] = {
     {&STATE_ADMIN_MODE, "Admin mode"},
     {&STATE_INIT, "Re-initialize"},
     {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"},
-    {&STATE_SEARCHING_BEACON, "Beacon search"}
 };
 
 // item count
-#define MENU_ITEM_COUNT 5
+#define MENU_ITEM_COUNT 4
 
 static unsigned char menuPos;
 

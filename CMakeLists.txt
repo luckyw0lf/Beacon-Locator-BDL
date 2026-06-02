@@ -38,8 +38,6 @@ mcux_add_source(
             lib/mpr121/mpr121.h
             lib/serial2lpuart/lpuart2.c
             lib/serial2lpuart/lpuart2.h
-            lib/sll/sll.c
-            lib/sll/sll.h
             lib/system_timer/system_timer.c
             lib/system_timer/system_timer.h
 
@@ -48,8 +46,6 @@ mcux_add_source(
             src/states.h
             src/states/state_init.c
             src/states/state_init.h
-            src/states/state_searching_beacon.c
-            src/states/state_searching_beacon.h
             src/states/state_navigation.c
             src/states/state_navigation.h
             src/states/state_game_missions/state_game_missions.h
@@ -72,8 +68,11 @@ mcux_add_source(
             src/keypad.h
             src/game_logger/game_logger.h
             src/game_logger/game_logger.c
-            src/game_logger/fsl_flashiap.c
-            src/game_logger/fsl_flashiap.h
+            src/game_logger/diskio.h
+            src/game_logger/diskio.c
+            src/game_logger/ff.h
+            src/game_logger/ff.c
+            src/game_logger/ffconf.h
 )
 
 mcux_add_include(
@@ -100,3 +99,7 @@ mcux_add_include(
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
 
+target_compile_definitions(getting_started PRIVATE 
+    CPU_MCXA153VLH=1
+    MCXA153_SERIES=1
+)

@@ -1,85 +1,67 @@
 #include "game_logger.h"
+#include "ff.h" 
 #include <stdio.h>
-#include <string.h>
-#include "fsl_flashiap.h"
-#include <MCXA153.h>
 
+static uint32_t room_times[MAX_ROOMS];
+static FATFS fs;
 
+static const char* room_names[MAX_ROOMS] = {
+    "Experience Mission",
+    "Material Question",
+    "Material Collection",
+    "Build Test"
+};
 
-#define LOG_FLASH_ADDRESS 0x0001E000 // the register for internal flash memory
-#define FLASH_SECTOR_SIZE 8192
-
-RouteLog logMemory[MAX_LOG_BEACON];
-flash_config_t flashConfig;
-
-// unlock MBC (memory block checker to access to the internal flash mem inside the board)
-static void unlock_flash_mbc (void) 
-{
-    GLIKEY0->CTRL_0 = 0x00060000U; GLIKEY0->CTRL_0 = 0x0002000FU;
-    GLIKEY0->CTRL_0 = 0x0001000FU; GLIKEY0->CTRL_1 = 0x00290000U;
-    GLIKEY0->CTRL_0 = 0x0002000FU; GLIKEY0->CTRL_1 = 0x00280000U;
-    GLIKEY0->CTRL_0 = 0x0000000FU; MBC0->MBC_MEMN_GLBAC[0] = 0x7700U;
-    for (uint8_t i = 0; i < 2U; i++) 
-    {
-        MBC0->MBC_INDEX[0].MBC_DOM0_MEM0_BLK_CFG_W[i] = 0x00000000U;
+bool Logger_Init(void) {
+    for(int i = 0; i < MAX_ROOMS; i++) {
+        room_times[i] = 0;
     }
-    GLIKEY0->CTRL_0 = 0x0002000FU;
-} 
+    // mouting the SD card
+    FRESULT fr = f_mount(&fs, "", 1); 
+    if (fr != FR_OK) {
+        printf("ERROR: SD Mount Failed! Code: %d\r\n", fr);
+        return false;
+    }
+    printf("SUCCESS: SD Card Mounted!\r\n");
+    return true;
+}
 
-void init_logger(void)
-{
-    unlock_flash_mbc();
-    FLASH_Init(&flashConfig);
-    memcpy(logMemory, (void*) LOG_FLASH_ADDRESS, size_t(logMemory));
-
-    currentRouteCount = 0;
-    for(int i = 0; i < MAX_LOG_BEACON_EACH_ROUTE; i++)
-    {
-        if (logMemory[i].startTime != 0 && logMemory[i].startTime != 0xFFFFFFFF)
-        {
-            currentRouteCount++;
-        }
-        else
-        {
-            break;
-        }
+void Logger_Record_Time(RoomID_t room, uint32_t seconds) {
+    if (room < MAX_ROOMS) {
+        room_times[room] = seconds;
     }
 }
 
-void saveLogEntry(RouteProfile_t *completeRoute, uint32_t start, uint32_t finish)
-{
-    if(currentRouteCount < MAX_LOG_BEACON_EACH_ROUTE && completeRoute != NULL)
-    {
-        // getting ID and routeName 
-        logMemory[currentRouteCount].routeID = completeRoute -> id;
-
-        strncpy (logMemory[currentRouteCount].routeName, completeRoute -> displayName, 19)
-        logMemory[currentRouteCount].routeName[19] = '\0';
-
-        // save time and calculate finish time for each route, this data used for GUI
-        logMemory[currentRouteCount].startTime = start;
-        logMemory[currentRouteCount].finishTime = finish;
-        logMemory[currentRouteCount].totalTime = finish - start;
-
-        currentRouteCount++; 
-        
-        //clear the flash memory and write down new data on it
-        __disable_irq();
-        FLASH_Erase(&flashConfig, LOG_FLASH_ADDRESS, FLASH_SECTOR_SIZE, kFLASH_ApiEraseKey);
-        FLASH_Program(&flashConfig, LOG_FLASH_ADDRESS, (uint8_t*)logMemory, sizeof(logMemory));
-        __enable_irq(); 
+void Logger_Respond_To_PC(void) {
+    uint32_t total = 0;
+    for(int i = 0; i < MAX_ROOMS; i++) {
+        printf("LOG:%d:%lu\r\n", i, room_times[i]);
+        total += room_times[i];
     }
+    printf("LOG:TOTAL:%lu\r\n", total);
 }
-void printToPC(void)
-{
-    printf("LOG_START");
-    for(int i = 0; i < currentRouteCount; i++)
-    {
-        logMemory[i].routeId,
-        logMemory[i].routeName,
-        logMemory[i].startTime,
-        logMemory[i].finishTime,
-        logMemory[i].totalTime;
+
+bool Logger_Export_Data(void) {
+    FIL fil;
+    FRESULT fr;
+    uint32_t total_time = 0;
+
+    for(int i = 0; i < MAX_ROOMS; i++) {
+        total_time += room_times[i];
     }
-    printf("LOG_END\r\n");
+
+    // open gamelog.txt and save data 
+    fr = f_open(&fil, "gamelog.txt", FA_WRITE | FA_OPEN_APPEND);
+    if (fr != FR_OK) return false;
+
+    f_printf(&fil, "--- NEW GAME SESSION ---\n");
+    for(int i = 0; i < MAX_ROOMS; i++) {
+        f_printf(&fil, "%s: %lu seconds\n", room_names[i], room_times[i]);
+    }
+    f_printf(&fil, "TOTAL TIME: %lu seconds\n", total_time);
+    f_printf(&fil, "------------------------\n\n");
+
+    f_close(&fil);
+    printf("SUCCESS: Log saved to SD Card!\r\n");
+    return true;
 }

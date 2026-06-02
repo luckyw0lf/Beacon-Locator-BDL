@@ -2,6 +2,16 @@
 #define STATE_GAME_MISSIONS_H
 
 #include "states.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef struct 
+{
+    char buffer [16];
+    uint8_t index;
+    bool submitted;
+}InputBuffer_t;
+
 
 void experience_entry(StateMachine_t *sm);
 void experience_main(StateMachine_t *sm);
