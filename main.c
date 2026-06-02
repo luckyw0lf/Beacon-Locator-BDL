@@ -133,7 +133,7 @@ int main(void)
             // reading the request from GUI to get data from SD card
             if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
             {
-                Logger_Respond_To_Pc();
+                Logger_Respond_To_PC();
             }
 
             memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
