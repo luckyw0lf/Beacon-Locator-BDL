@@ -76,6 +76,20 @@ void search_main(StateMachine_t *sm)
                 printf("minor: %s\r\n", targetBeacon.minor);
                 printf("rssi : %s\r\n", targetBeacon.rssi);
                 printf("step : %d\r\n", current_step);
+
+                oled_clear();
+
+                oled_set_cursor(0, 0);
+                oled_puts("MAJ:");
+                oled_puts(targetBeacon.major);
+
+                oled_set_cursor(0, 2);
+                oled_puts("MIN:");
+                oled_puts(targetBeacon.minor);
+
+                oled_set_cursor(0, 4);
+                oled_puts("RSSI:");
+                oled_puts(targetBeacon.rssi);
                 
                 if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
                 {

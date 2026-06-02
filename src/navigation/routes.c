@@ -23,9 +23,9 @@
  * B10 = minor 000A
  */
 static const BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0B01", "0001", "B01"},
-    {BEACON_B02, "0B01", "0002", "B02"},
-    {BEACON_B03, "0B01", "0003", "B03"},
+    {BEACON_B01, "0AEA", "0032", "B01"},
+    {BEACON_B02, "0AEA", "0026", "B02"},
+    {BEACON_B03, "0AEA", "0037", "B03"},
     {BEACON_B04, "0B01", "0004", "B04"},
     {BEACON_B05, "0B01", "0005", "B05"},
     {BEACON_B06, "0B01", "0006", "B06"},
@@ -45,11 +45,10 @@ static const BeaconDefinition_t beaconDefinitions[] = {
  * 0006 = target room
  */
 static const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B04, BEACON_ROLE_PASS_BY,  -65, "Turn left", "From corridor", ""},
-    {BEACON_B05, BEACON_ROLE_APPROACH, -70, "You are close", "Keep going", ""},
-    {BEACON_B06, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
+    {BEACON_B01, BEACON_ROLE_PASS_BY,  -70, "Good direction", "Turn right from corridor", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -70, "Good direction", "Target on righ", ""},
+    
+    {BEACON_B03, BEACON_ROLE_TARGET,   -60, "Experience room", "Reached", "Press ENTER"}
 };
 
 /*
