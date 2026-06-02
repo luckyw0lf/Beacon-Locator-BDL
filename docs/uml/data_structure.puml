@@ -1,0 +1,127 @@
+@startuml
+title Route-Based Beacon Navigation - Data Structure UML
+
+class StateMachine_t {
+    +State_t* state
+    +bool isBusy
+    +State_t* buffer[QUEUE_CAPACITY]
+    +fifo_t queue
+}
+
+class State_t {
+    +entry(StateMachine_t* sm)
+    +main(StateMachine_t* sm)
+    +exit(StateMachine_t* sm)
+    +char* name
+}
+
+class RouteProfile_t {
+    +RouteId_t id
+    +char* displayName
+    +RouteBeaconRule_t* rules
+    +uint8_t ruleCount
+    +State_t* nextState
+}
+
+class RouteBeaconRule_t {
+    +BeaconId_t beaconId
+    +BeaconRole_t role
+    +int rssiThreshold
+}
+
+class BeaconDefinition_t {
+    +BeaconId_t id
+    +char* mac
+    +char* label
+}
+
+class BeaconScan_t {
+    +BeaconId_t id
+    +int rssi
+    +bool valid
+}
+
+class BeaconNavigator_t {
+    +RouteProfile_t* activeRoute
+    +int bestRssi
+    +int currentAvgRssi
+    +bool targetSeen
+    +bool targetNear
+    +navigation_set_route()
+    +navigation_update()
+    +navigation_get_next_state()
+}
+
+class InputBuffer_t {
+    +char buffer[16]
+    +uint8_t index
+    +bool submitted
+}
+
+enum BeaconRole_t {
+    IGNORE
+    PASS_BY
+    APPROACH
+    TARGET
+    WRONG_WAY
+}
+
+enum BeaconId_t {
+    B01
+    B02
+    B03
+    B04
+    B05
+    B06
+    B07
+    B08
+    B09
+    B10
+}
+
+enum RouteId_t {
+    START_TO_EXPERIENCE
+    EXPERIENCE_TO_MATERIAL_QUESTION
+    MATERIAL_QUESTION_TO_COLLECTION
+    COLLECTION_TO_BUILD_TEST
+    BUILD_TEST_TO_FINISH
+}
+
+StateMachine_t --> State_t : current state
+StateMachine_t --> State_t : queued states
+State_t --> StateMachine_t : receives sm pointer
+
+RouteProfile_t --> RouteBeaconRule_t : contains rules
+RouteBeaconRule_t --> BeaconRole_t : has role
+RouteBeaconRule_t --> BeaconId_t : references beacon id
+RouteProfile_t --> RouteId_t : has route id
+RouteProfile_t --> State_t : next mission state
+
+BeaconDefinition_t --> BeaconId_t : physical beacon id
+BeaconNavigator_t --> RouteProfile_t : active route
+BeaconNavigator_t --> BeaconScan_t : processes scan results
+
+note right of RouteBeaconRule_t
+A beacon has no fixed room meaning.
+
+Its meaning is decided by the active route.
+
+Example:
+B07 in route A = PASS_BY
+B07 in route B = TARGET
+end note
+
+note bottom of BeaconNavigator_t
+BeaconNavigator stores navigation progress:
+
+bestRssi:
+    strongest target RSSI seen so far
+
+currentAvgRssi:
+    averaged RSSI from recent scans
+
+targetSeen:
+    true after the target beacon is first detected
+end note
+
+@enduml

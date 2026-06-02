@@ -7,7 +7,7 @@
 #include "keypad.h"
 #include "lpi2c.h"
 #include "oled.h"
-
+#include "hm10.h"
 
 #ifdef DEBUG
 #define TARGETSTR "Debug"
@@ -21,6 +21,7 @@ static uint32_t bootDelay = 1000;
 static uint32_t now;
 
 void init_entry(StateMachine_t *sm){
+    
     serial_init(115200);
     
     printf("BDL REVERSE GEOCAHCE BOOTING.....\r\n");
@@ -28,19 +29,26 @@ void init_entry(StateMachine_t *sm){
     
     printf("ENTER %s\r\n", sm->state->name);
     
+    __enable_irq();
     lpi2c_controller_init();
+
+    //initialize oled
+    oled_init();
 
     //initialize keypad
     initKeypad();
+    while(lpi2c_busy()){}
 
     // Globally enable interrupts
-    __enable_irq();
-    
+    hm10_init(9600);
     // Generate SysTick interrupt every 1ms
     SysTick_Config(48000);
 
     // set time for min bootup delay
     now = ms;
+    
+    oled_set_cursor(0, 0);
+    oled_puts("BDL");
 
     /*lcd_init();
     lcd_backlight(1);
@@ -49,11 +57,6 @@ void init_entry(StateMachine_t *sm){
     lcd_put("BDL");
     lcd_set_cursor(0,1);
     lcd_put("beacon finder");*/
-    oled_init();
-    oled_clear();
-
-    oled_set_cursor(0, 4);
-    oled_puts("3>456789 : -&/.?");
 
 
     addToQueue(sm, &STATE_BOOT_MENU);
@@ -61,7 +64,14 @@ void init_entry(StateMachine_t *sm){
 void init_main(StateMachine_t *sm){
     // wait 500ms for startup screen and wait for lpi2c
     if(ms - now > bootDelay && !lpi2c_busy())
+    {
+        oled_init();
+        oled_set_cursor(0, 0);
+        oled_puts("BDL BEACON");
+        oled_set_cursor(0, 1);
+        oled_puts("LOCATOR");
         sm->isBusy = false;
+    }
 }
 void init_exit(StateMachine_t *sm){
 }

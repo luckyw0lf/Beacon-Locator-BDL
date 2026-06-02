@@ -73,30 +73,30 @@ void lpi2c_controller_init(void)
     // LPI2C0: [1] = Peripheral clock is enabled
     // PORT3: [1] = Peripheral clock is enabled
     MRCC0->MRCC_GLB_CC0_SET = MRCC_MRCC_GLB_CC0_LPI2C0(1);
-    MRCC0->MRCC_GLB_CC1_SET = MRCC_MRCC_GLB_CC1_PORT3(1);
+    MRCC0->MRCC_GLB_CC0_SET = MRCC_MRCC_GLB_CC0_PORT1(1);
 
     // Release modules from reset and leave others unchanged
     // LPI2C0: [1] = Peripheral is released from reset
     // PORT3: [1] = Peripheral is released from reset
     MRCC0->MRCC_GLB_RST0_SET = MRCC_MRCC_GLB_RST0_LPI2C0(1);
-    MRCC0->MRCC_GLB_RST1_SET = MRCC_MRCC_GLB_RST1_PORT3(1);
+    MRCC0->MRCC_GLB_RST0_SET = MRCC_MRCC_GLB_RST0_PORT1(1);
 
-    // Configure P3_27 and P3_28
+    // Configure P1_8 and P1_9
     // LK : [1] = Locks this PCR
     // INV: [0] = Does not invert
     // IBE: [1] = Digital Input Buffer Enable, otherwise pin is used for analog
     //            functions
-    // MUX: [0010] = Alternative 2
+    // MUX: [0011] = Alternative 3
     // DSE: [0] = low drive strength is configured on the corresponding pin,
     //            if the pin is configured as a digital output
     // ODE: [0] = Disables
     // SRE: [0] = Fast
     // PE:  [1] = Enables
     // PS:  [1] = Enables internal pullup resistor
-    PORT3->PCR[27] = PORT_PCR_LK(1) | PORT_PCR_MUX(2) | PORT_PCR_PE(1) |
-        PORT_PCR_PS(1) | PORT_PCR_ODE(1) | PORT_PCR_IBE(1); // LPI2C0_SCL
-    PORT3->PCR[28] = PORT_PCR_LK(1) | PORT_PCR_MUX(2) | PORT_PCR_PE(1) |
-        PORT_PCR_PS(1) | PORT_PCR_ODE(1) | PORT_PCR_IBE(1); // LPI2C0_SDA
+    PORT1->PCR[8] = PORT_PCR_LK(1) | PORT_PCR_MUX(3) | PORT_PCR_PE(1) |
+                     PORT_PCR_PS(1) | PORT_PCR_ODE(1) | PORT_PCR_IBE(1); // LPI2C0_SDA
+    PORT1->PCR[9] = PORT_PCR_LK(1) | PORT_PCR_MUX(3) | PORT_PCR_PE(1) |
+                     PORT_PCR_PS(1) | PORT_PCR_ODE(1) | PORT_PCR_IBE(1); // LPI2C0_SCL
 
     // From section 36.5 Initialization (NXP, 2024)
     //

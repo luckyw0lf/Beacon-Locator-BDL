@@ -1,0 +1,50 @@
+@startuml
+title Beacon-Guided Air Valve Game - Main FSM
+
+[*] --> INIT
+
+INIT --> NAVIGATION : set route START_TO_EXPERIENCE
+
+NAVIGATION --> EXPERIENCE_MISSION : target found + ENTER\nnextState = EXPERIENCE_MISSION
+
+EXPERIENCE_MISSION --> NAVIGATION : mission question correct\nset route EXPERIENCE_TO_MATERIAL_QUESTION
+
+NAVIGATION --> MATERIAL_QUESTION : target found + ENTER\nnextState = MATERIAL_QUESTION
+
+MATERIAL_QUESTION --> NAVIGATION : required parts answer correct\nset route MATERIAL_QUESTION_TO_COLLECTION
+
+NAVIGATION --> MATERIAL_COLLECTION : target found + ENTER\nnextState = MATERIAL_COLLECTION
+
+MATERIAL_COLLECTION --> NAVIGATION : checksum correct\nset route COLLECTION_TO_BUILD_TEST
+
+NAVIGATION --> BUILD_AND_TEST : target found + ENTER\nnextState = BUILD_AND_TEST
+
+BUILD_AND_TEST --> NAVIGATION : valve test passed\nset route BUILD_TEST_TO_FINISH
+
+NAVIGATION --> FINISH : target found + ENTER\nnextState = FINISH
+
+FINISH --> SUCCESS : mission complete
+SUCCESS --> [*]
+
+note right of NAVIGATION
+Generic navigation state.
+
+It does not know fixed room names.
+It uses the active RouteProfile
+to interpret beacon IDs.
+
+Same beacon can be:
+- PASS_BY in one route
+- TARGET in another route
+- WRONG_WAY in another route
+end note
+note bottom
+Design rule:
+
+Mission states handle puzzles.
+Navigation state handles movement between locations.
+
+Do not mix beacon logic into mission states.
+end note
+
+@enduml

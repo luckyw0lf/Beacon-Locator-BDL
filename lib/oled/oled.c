@@ -56,8 +56,6 @@ void oled_set_cursor(uint8_t column, uint8_t page)
 
 void oled_init(void)
 {
-    lpi2c_controller_init();
-
     // Basic SSD1306 128x64 init sequence
     oled_command(0xAE); // Display OFF
 

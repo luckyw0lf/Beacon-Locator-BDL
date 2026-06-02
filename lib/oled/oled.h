@@ -2,6 +2,7 @@
 #define OLED_H
 
 #include <stdint.h>
+#include "lpi2c.h"
 
 void oled_init(void);
 void oled_clear(void);

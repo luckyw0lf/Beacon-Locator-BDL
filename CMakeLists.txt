@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.22.0)
+if(NOT DEFINED board OR "${board}" STREQUAL "")
+    set(board frdmmcxa153 CACHE STRING "Target board" FORCE)
+endif()
 
 cmake_path(APPEND conf_file_path ${CMAKE_CURRENT_LIST_DIR} ${board} prj.conf)
 set(CONF_FILE ${conf_file_path} ${CONF_FILE})
@@ -45,14 +48,30 @@ mcux_add_source(
             src/states/state_init.h
             src/states/state_searching_beacon.c
             src/states/state_searching_beacon.h
+            src/states/state_navigation.c
+            src/states/state_navigation.h
+            src/states/state_game_missions/state_game_missions.h
+            src/states/state_game_missions/state_experience_mission.c
+            src/states/state_game_missions/state_material_question.c
+            src/states/state_game_missions/state_material_collection.c
+            src/states/state_game_missions/state_build_test.c
+            src/states/state_game_missions/state_finish.c
             src/states/state_menu.c
             src/states/state_menu.h
+            src/states/state_game_intro.c
+            src/states/state_game_intro.h
+            src/beacon/beacon_parser.c
+            src/beacon/beacon_parser.h
+            src/navigation/routes.c
+            src/navigation/routes.h
             src/hm10/hm10.c
             src/hm10/hm10.h
             src/helperFunctions.c
             src/helperFunctions.h
             src/keypad.c
             src/keypad.h
+           
+            
 )
 
 mcux_add_include(
@@ -68,7 +87,11 @@ mcux_add_include(
              lib/serial2lpuart
              lib/sll
              src
+          
              src/states
+             src/states/state_game_missions
+             src/beacon
+             src/navigation
              src/hm10
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)
