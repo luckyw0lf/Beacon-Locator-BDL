@@ -29,7 +29,7 @@ void material_collection_entry(StateMachine_t *sm)
 
     oled_clear();
     oled_set_cursor(0, 0);
-    oled_puts("MATERIAL COLLECTION"); //
+    oled_puts("MATERIAL COLLECTION");
 
     oled_set_cursor(0, 2);
     oled_puts("ENTER THE ANSWER:");
@@ -46,7 +46,7 @@ void material_collection_main(StateMachine_t *sm)
     {
         keypadFlag = false;
 
-        if (pressedKey >= '0' && pressedKey <= '9') 
+        if (pressedKey >= ONE && pressedKey <= NINE) 
         {
             if (input.index < 15)
             { 
@@ -62,8 +62,7 @@ void material_collection_main(StateMachine_t *sm)
             if (input.index > 0) 
             {
                 input.index--;
-                input.buffer[input.index] = '\0';
-                
+                input.buffer[input.index] = '\0';                
                
                 oled_set_cursor(0, 4);
                 oled_puts("                "); 

@@ -40,7 +40,7 @@ void build_test_main(StateMachine_t *sm)
     if (keypadFlag)
     {
         keypadFlag = false;
-        if (pressedKey >= '0' && pressedKey <= '9') 
+        if (pressedKey >= ONE && pressedKey <= NINE)
         {
             if (input.index < 15)
             { 

@@ -54,6 +54,7 @@ mcux_add_source(
             src/states/state_game_missions/state_material_collection.c
             src/states/state_game_missions/state_build_test.c
             src/states/state_game_missions/state_finish.c
+
             src/states/state_menu.c
             src/states/state_menu.h
             src/beacon/beacon_parser.c

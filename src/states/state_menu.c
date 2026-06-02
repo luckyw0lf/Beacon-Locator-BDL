@@ -24,10 +24,11 @@ extern uint16_t pressedKey;
 
 
 static menuItem_t menuItems[] = {
-    {&STATE_NAVIGATION, "Start Game"},   
+    // {&STATE_GAME_INTRO, "Start Game"},   
     {&STATE_ADMIN_MODE, "Admin mode"},
     {&STATE_INIT, "Re-initialize"},
     {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"},
+    {&STATE_NAVIGATION, "Beacon search"}
 };
 
 // item count

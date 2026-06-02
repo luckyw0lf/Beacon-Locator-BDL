@@ -33,22 +33,14 @@ void Logger_Record_Time(RoomID_t room, uint32_t seconds) {
 }
 
 void Logger_Respond_To_PC(void) {
-    uint32_t total = 0;
     for(int i = 0; i < MAX_ROOMS; i++) {
         printf("LOG:%d:%lu\r\n", i, room_times[i]);
-        total += room_times[i];
     }
-    printf("LOG:TOTAL:%lu\r\n", total);
 }
 
 bool Logger_Export_Data(void) {
     FIL fil;
     FRESULT fr;
-    uint32_t total_time = 0;
-
-    for(int i = 0; i < MAX_ROOMS; i++) {
-        total_time += room_times[i];
-    }
 
     // open gamelog.txt and save data 
     fr = f_open(&fil, "gamelog.txt", FA_WRITE | FA_OPEN_APPEND);
@@ -58,7 +50,6 @@ bool Logger_Export_Data(void) {
     for(int i = 0; i < MAX_ROOMS; i++) {
         f_printf(&fil, "%s: %lu seconds\n", room_names[i], room_times[i]);
     }
-    f_printf(&fil, "TOTAL TIME: %lu seconds\n", total_time);
     f_printf(&fil, "------------------------\n\n");
 
     f_close(&fil);

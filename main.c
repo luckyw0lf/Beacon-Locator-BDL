@@ -33,12 +33,11 @@ int pc_rx_index = 0;
 StateMachine_t sm;
 
 // this element use to count the time that kids spend on play game each state
-volatile uint32_t puzzle_seconds_counter = 0    ;
-volatile uint32_t systick_counter = 0;
+volatile uint32_t puzzle_seconds_counter = 0;
+volatile uint32_t systick_counter = 0; // using this element to count up the time
 
 extern char keypadFlag;
 extern uint16_t pressedKey;
-
 
 // -----------------------------------------------------------------------------
 // Local function prototypes
@@ -54,14 +53,20 @@ static StateMachine_t systemSM;
 State_t STATE_INIT = {&init_entry, &init_main, &init_exit, "INIT"};
 State_t STATE_BOOT_MENU = {&menu_entry, &menu_main, &menu_exit, "BOOT_MENU"};
 State_t STATE_ADMIN_MODE = {&menu_entry, &menu_main, &menu_exit, "ADMIN_MODE"};
-State_t STATE_SEARCHING_BEACON = {&navigation_entry, &navigation_main, &navigation_exit, "SEARCHING_BEACON"};
 
 // in game states
 State_t STATE_NAVIGATION = {
     &navigation_entry,
     &navigation_main,
     &navigation_exit,
-    "NAVIGATION"};
+    "SEARCHING_BEACON"};
+
+// State_t STATE_GAME_INTRO = {
+//     &game_intro_entry,
+//     &game_intro_main,
+//     &game_intro_exit,
+//     "GAME_INTRO"
+// };
 
 State_t STATE_EXPERIENCE_MISSION = {
     &experience_entry,
@@ -110,6 +115,9 @@ int main(void)
     initKeypad();
     Logger_Init();
 
+    //setup the Timer
+    SysTick_Config(SystemCoreClock / 1000U);
+
     while (1)
     {
         if (handle_touch_interrupt)
@@ -125,19 +133,27 @@ int main(void)
         char c = serial_rxcnt();
 
         pc_rx_buffer[pc_rx_index++] = c;
-
-        if (c == '\n' || c == '\r' || pc_rx_index >= 49)
+        
+        //reading the data received from GUI
+        if (serial_rxcnt() > 0)
         {
-            pc_rx_buffer[pc_rx_index] = '\0';
+            char c = (char)serial_getchar(); 
 
-            // reading the request from GUI to get data from SD card
-            if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
+            pc_rx_buffer[pc_rx_index++] = c;
+
+            if (c == '\n' || c == '\r' || pc_rx_index >= 49)
             {
-                Logger_Respond_To_PC();
-            }
+                pc_rx_buffer[pc_rx_index] = '\0';
 
-            memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
-            pc_rx_index = 0;
+                // reading the request from GUI to get data from SD card
+                if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
+                {
+                    Logger_Respond_To_PC();
+                }
+
+                memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
+                pc_rx_index = 0;
+            }
         }
     }
 }
@@ -147,6 +163,13 @@ int main(void)
 void SysTick_Handler(void)
 {
     ms++;
+
+    systick_counter++;
+    if (systick_counter == 1000)
+    {
+        systick_counter = 0;
+        puzzle_seconds_counter++;
+    }
 }
 
 void emptyFunc(StateMachine_t *sm) {}
