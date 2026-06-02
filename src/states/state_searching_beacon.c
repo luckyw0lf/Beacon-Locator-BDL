@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <oled.h>
 #include "beacon_parser.h"
-#include "system_timer.h"
 #include "routes.h"
 
 

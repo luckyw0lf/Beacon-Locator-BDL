@@ -40,8 +40,6 @@ mcux_add_source(
             lib/serial2lpuart/lpuart2.h
             lib/sll/sll.c
             lib/sll/sll.h
-            lib/system_timer/system_timer.c
-            lib/system_timer/system_timer.h
 
             main.c
             src/states.c
@@ -88,7 +86,6 @@ mcux_add_include(
              lib/mpr121
              lib/serial2lpuart
              lib/sll
-             lib/system_timer
              src
           
              src/states
