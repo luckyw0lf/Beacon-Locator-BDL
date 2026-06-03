@@ -39,9 +39,6 @@ void experience_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
-            navigation_set_route(ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION);
-            navigation_set_next_state(&STATE_MATERIAL_QUESTION);
-
             addToQueue(sm, &STATE_NAVIGATION);
             sm->isBusy = false;
         }

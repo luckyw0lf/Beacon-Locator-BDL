@@ -59,9 +59,6 @@ static void show_intro_page(void)
 
 static void start_game(StateMachine_t *sm)
 {
-    navigation_set_route(ROUTE_START_TO_EXPERIENCE);
-    navigation_set_next_state(&STATE_EXPERIENCE_MISSION);
-
     addToQueue(sm, &STATE_NAVIGATION);
     sm->isBusy = false;
 }

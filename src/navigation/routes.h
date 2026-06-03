@@ -2,6 +2,7 @@
 #define ROUTES_H
 
 #include <stdint.h>
+#include "states.h"
 
 typedef enum
 {
@@ -33,7 +34,7 @@ typedef enum
     ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION,
     ROUTE_MATERIAL_QUESTION_TO_COLLECTION,
     ROUTE_COLLECTION_TO_BUILD_TEST,
-    ROUTE_UNKNOWN
+    ROUTE_END
 } RouteId_t;
 
 typedef struct
@@ -42,6 +43,9 @@ typedef struct
     const char *major;
     const char *minor;
     const char *label;
+    char rssi[5];
+    char rssiSize;
+    char index;
 } BeaconDefinition_t;
 
 typedef struct
@@ -66,6 +70,8 @@ typedef struct
 
     const RouteBeaconRule_t *rules;
     uint8_t ruleCount;
+    State_t *puzzleState;
+
 } RouteProfile_t;
 
 const BeaconDefinition_t *routes_get_beacon_definition(BeaconId_t beaconId);

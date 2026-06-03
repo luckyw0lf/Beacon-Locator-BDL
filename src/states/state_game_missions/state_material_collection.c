@@ -38,9 +38,6 @@ void material_collection_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
-            navigation_set_route(ROUTE_COLLECTION_TO_BUILD_TEST);
-            navigation_set_next_state(&STATE_BUILD_TEST);
-
             addToQueue(sm, &STATE_NAVIGATION);
             sm->isBusy = false;
         }

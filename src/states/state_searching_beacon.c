@@ -23,7 +23,7 @@ IbeaconData_t buffer[FRAME_SIZE];
 
 static node_t *pHead = NULL;
 static node_t *currentNode = NULL;
-static int current_step = 1;
+// static int current_step = 1;
 char id[9] = "4C000215";
 extern uint32_t current_startTime;
 
@@ -55,82 +55,82 @@ void search_entry(StateMachine_t *sm)
 
 void search_main(StateMachine_t *sm)
 {
-    static char raw_beacon_string[150];
+    // static char raw_beacon_string[150];
 
-    if (hm10_read_line(raw_beacon_string, 150) == true)
-    {
-        if (strstr(raw_beacon_string, "OK+DISCE") != NULL)
-        {
-            printf("--- RESTARTING HM-10 ---\r\n");
+    // if (hm10_read_line(raw_beacon_string, 150) == true)
+    // {
+    //     if (strstr(raw_beacon_string, "OK+DISCE") != NULL)
+    //     {
+    //         printf("--- RESTARTING HM-10 ---\r\n");
 
-            hm10_send_command("AT+DISI?");
-        }
-        else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
-        {   
+    //         hm10_send_command("AT+DISI?");
+    //     }
+    //     else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
+    //     {   
            
-            if (strcmp(targetBeacon.factoryId, id) == 0)
-            {  
-                printf("IBEACON RAW: %s\r\n", raw_beacon_string);
-                printf("major: %s\r\n", targetBeacon.major);
-                printf("minor: %s\r\n", targetBeacon.minor);
-                printf("rssi : %s\r\n", targetBeacon.rssi);
-                printf("step : %d\r\n", current_step);
+    //         if (strcmp(targetBeacon.factoryId, id) == 0)
+    //         {  
+    //             printf("IBEACON RAW: %s\r\n", raw_beacon_string);
+    //             printf("major: %s\r\n", targetBeacon.major);
+    //             printf("minor: %s\r\n", targetBeacon.minor);
+    //             printf("rssi : %s\r\n", targetBeacon.rssi);
+    //             printf("step : %d\r\n", current_step);
                 
-                oled_clear();
+    //             oled_clear();
 
-                oled_set_cursor(0, 0);
-                oled_puts("MAJ:");
-                oled_puts(targetBeacon.major);
+    //             oled_set_cursor(0, 0);
+    //             oled_puts("MAJ:");
+    //             oled_puts(targetBeacon.major);
 
-                oled_set_cursor(0, 2);
-                oled_puts("MIN:");
-                oled_puts(targetBeacon.minor);
+    //             oled_set_cursor(0, 2);
+    //             oled_puts("MIN:");
+    //             oled_puts(targetBeacon.minor);
 
-                oled_set_cursor(0, 4);
-                oled_puts("RSSI:");
-                oled_puts(targetBeacon.rssi);
+    //             oled_set_cursor(0, 4);
+    //             oled_puts("RSSI:");
+    //             oled_puts(targetBeacon.rssi);
 
-                if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
-                {
-                 printf("MATCH FOUND\r\n");
+    //             if (compareSLL(currentNode, targetBeacon.major, targetBeacon.minor, targetBeacon.rssi))
+    //             {
+    //              printf("MATCH FOUND\r\n");
                  
-                 oled_clear();
-                 oled_set_cursor(0, 0);
-                 oled_puts("SIGNAL FOUND");
+    //              oled_clear();
+    //              oled_set_cursor(0, 0);
+    //              oled_puts("SIGNAL FOUND");
 
-                 oled_set_cursor(0, 2);
-                 oled_puts("KEEP GOING");
+    //              oled_set_cursor(0, 2);
+    //              oled_puts("KEEP GOING");
 
-                    if (current_step == 1)
-                    {
-                        GPIO3->PSOR = (1 << 15);
-                        for (int i = 0; i < 2000000; i++)
-                        {   
-                        }
-                        GPIO3->PCOR = (1 << 15);
-                    }
-                    else if (current_step == 2)
-                    {
-                        GPIO3->PCOR = (1 << 15);
-                    }
-                    else if (current_step == 3)
-                    {
-                        GPIO3->PSOR = (1 << 14);
-                    }
+    //                 if (current_step == 1)
+    //                 {
+    //                     GPIO3->PSOR = (1 << 15);
+    //                     for (int i = 0; i < 2000000; i++)
+    //                     {   
+    //                     }
+    //                     GPIO3->PCOR = (1 << 15);
+    //                 }
+    //                 else if (current_step == 2)
+    //                 {
+    //                     GPIO3->PCOR = (1 << 15);
+    //                 }
+    //                 else if (current_step == 3)
+    //                 {
+    //                     GPIO3->PSOR = (1 << 14);
+    //                 }
 
-                    currentNode = currentNode->pNextNode;
-                    current_step++;
+    //                 currentNode = currentNode->pNextNode;
+    //                 current_step++;
 
-                    if (currentNode == NULL)
-                    {
-                        printf("you have reached the end of the route");
-                        sm->isBusy = false;
-                    }
-                }
-            }
-        }
-        memset(raw_beacon_string, 0, sizeof(raw_beacon_string));
-    }
+    //                 if (currentNode == NULL)
+    //                 {
+    //                     printf("you have reached the end of the route");
+    //                     sm->isBusy = false;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     memset(raw_beacon_string, 0, sizeof(raw_beacon_string));
+    // }
 }
 
 void search_exit(StateMachine_t *sm)

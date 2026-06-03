@@ -5,7 +5,19 @@
 #include "serial.h"
 #include <stdbool.h>
 #include <string.h>
+#include "routes.h"
+#include "state_searching_beacon.h"
 
+#define TARGET_FACTORY_ID "4C000215"
+
+extern BeaconDefinition_t beaconDefinitions[];
+extern char beaconDefCount;
+
+bool hm10_isBusy = false;
+static uint16_t string_index = 0;
+static IbeaconData_t current_beacon;
+// static uint8_t timeoutCounter = 0;
+static char buffer[80]; // length of a full beacon read string
 void hm10_init(uint32_t baudrate)
 {
 
@@ -25,60 +37,52 @@ void hm10_init(uint32_t baudrate)
     GPIO3->PDDR |= (1 << 14);
 }
 
-bool hm10_read_line(char *buffer, uint16_t max_length) {
-    static uint16_t index = 0;
-    static char saved_char = 0; 
+void hm10_read_beacons() {
 
-    while (lpuart2_rxcnt() > 0 || saved_char != 0) { 
-        uint8_t data;
-
-        if (saved_char != 0) {
-            data = (uint8_t)saved_char;
-            saved_char = 0;
-        } else {
-            data = lpuart2_getchar();
-        }
-
-        if (data == 'O' && index > 0) {
-            buffer[index] = '\0';
-            saved_char = 'O';   
-            index = 0;          
-            
-            serial_putchar('\r');
-            serial_putchar('\n');
-            
-            return true;
-        }
-
-        serial_putchar(data);
-
+    while (lpuart2_rxcnt() > 0) { 
+        uint8_t data = lpuart2_getchar();
+        buffer[string_index] = (char)data;
+        string_index++;
         if (data == '\n' || data == '\r') {
-            if (index > 0) {
-                buffer[index] = '\0';
-                index = 0;
-                return true;
+            // parse the data, reset buffer
+            if(strncmp(&buffer[0], "OK+DISCE", 8) == 0){
+                string_index = 0;
+                memset(buffer, 0, 80); // clear the buffer
+                hm10_isBusy = false;
             }
-        } 
 
-        else {
-            if (index < max_length - 1) {
-                buffer[index] = (char)data;
-                index++;
+            if (strncmp(&buffer[8], TARGET_FACTORY_ID, 8) != 0) { // is not a beacon (or matched one)
+                string_index = 0;
+                memset(buffer, 0, 80); // clear the buffer
+                continue; // skip a step in the while loop
             }
-            if (index == 8 && strncmp (buffer, "OK+DISCE", 8) == 0)
-            {
-                buffer [index] = '\0';
-                index = 0 ;
 
-                serial_putchar('\r');
-                serial_putchar('\n');
+                
+            sscanf(buffer, 
+                "OK+DISC:%8[^:]:%32[^:]:%4[0-9A-Fa-f]%4[0-9A-Fa-f]%2[0-9A-Fa-f]:%12[^:]:%4s",
+                current_beacon.factoryId,
+                current_beacon.uuid,
+                current_beacon.major,
+                current_beacon.minor,
+                current_beacon.power,
+                current_beacon.mac,
+                current_beacon.rssi
+            );
 
-                return true;
-            }
+            string_index = 0;
+            memset(buffer, 0, 80); // clear the buffer
+
+            // // printf("\r\nmajor: %s\r\nminor: %s\r\npower: %s\r\nrssi: %s\r\n", current_beacon.major, current_beacon.minor, current_beacon.power, current_beacon.rssi);
+            // for(char x = 0; x < beaconDefCount; x++){
+            //     if(beaconDefinitions[x].minor
+            // }
         }
     }
+    // timeoutCounter++;
 
-    return false; 
+    if(timeoutCounter > 100){
+        hm10_isBusy = false;
+    }
 }
 
 void hm10_send_command(const char *cmd)
