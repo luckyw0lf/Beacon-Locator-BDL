@@ -2,18 +2,19 @@
 #define GAME_LOGGER_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
-#define MAX_LOG_BEACON 10
+typedef enum {
+    ROOM_EXPERIENCE = 0,
+    ROOM_QUESTION,
+    ROOM_COLLECTION,
+    ROOM_BUILD_TEST,
+    MAX_ROOMS
+} RoomID_t;
 
-typedef struct
-{
-    char beaconID[20];
-    uint32_t startTime;
-    uint32_t finishTime;
-} RouteLog;
+bool Logger_Init(void);
+void Logger_Record_Time(RoomID_t room, uint32_t seconds);
+bool Logger_Save_Data(void);
+void Logger_Respond_To_PC(void);
 
-void init_logger(void);
-void saveLogEntry(const char *id, uint32_t start, uint32_t finish);
-void printToPC(void);
-
-#endif 
+#endif
