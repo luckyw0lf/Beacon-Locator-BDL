@@ -8,6 +8,7 @@
 #include "lpi2c.h"
 #include "oled.h"
 #include "hm10.h"
+#include "lock.h"
 
 #ifdef DEBUG
 #define TARGETSTR "Debug"
@@ -34,6 +35,9 @@ void init_entry(StateMachine_t *sm){
 
     //initialize oled
     oled_init();
+
+    //initialize lock
+    lock_init();
 
     //initialize keypad
     initKeypad();

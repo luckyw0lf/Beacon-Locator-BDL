@@ -2,6 +2,7 @@
 
 #include "keypad.h"
 #include "oled.h"
+#include "lock.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,23 +12,7 @@ extern State_t STATE_FINISH;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
-/*
- 
-  Replace this function with the real electronic lock control.
 
- */
-static void open_lock(void)
-{
-    printf("LOCK OPEN COMMAND\r\n");
-
-    /*
-     Example placeholder:
-     
-      GPIOx->PSOR = (1 << LOCK_PIN);
-      delay...
-      GPIOx->PCOR = (1 << LOCK_PIN);
-     */
-}
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -155,7 +140,7 @@ void build_test_main(StateMachine_t *sm)
                 printf("Final code correct\r\n");
 
                 show_correct_answer();
-                open_lock();
+                lock_open();
 
                 addToQueue(sm, &STATE_FINISH);
                 sm->isBusy = false;
