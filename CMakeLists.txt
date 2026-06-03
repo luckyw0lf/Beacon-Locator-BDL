@@ -38,8 +38,6 @@ mcux_add_source(
             lib/mpr121/mpr121.h
             lib/serial2lpuart/lpuart2.c
             lib/serial2lpuart/lpuart2.h
-            lib/system_timer/system_timer.c
-            lib/system_timer/system_timer.h
 
             main.c
             src/states.c
@@ -87,8 +85,6 @@ mcux_add_include(
              lib/oled
              lib/mpr121
              lib/serial2lpuart
-             lib/sll
-             lib/system_timer
              
              src
              src/game_logger
