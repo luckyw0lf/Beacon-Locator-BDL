@@ -3,6 +3,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "lock.h"
+#include "game_logger.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -22,6 +23,7 @@ typedef enum
 } BuildPage_t;
 
 static BuildPage_t currentPage = BUILD_PAGE_INTRO_1;
+extern volatile uint32_t puzzle_seconds_counter;
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -192,6 +194,22 @@ void build_test_main(StateMachine_t *sm)
             {
                 currentPage = BUILD_PAGE_BUILD_HELP;
                 show_build_help_page();
+                printf("Final code correct\r\n");
+                //save finish time into SD card
+                Logger_Record_Time(ROUTE_COLLECTION_TO_BUILD_TEST, puzzle_seconds_counter);           
+
+                show_correct_answer();
+                lock_open();
+
+                addToQueue(sm, &STATE_FINISH);
+                sm->isBusy = false;
+            }
+            else
+            {
+                printf("Wrong final code: %s\r\n", answerBuffer);
+
+                clear_answer();
+                show_wrong_answer();
             }
 
             return;

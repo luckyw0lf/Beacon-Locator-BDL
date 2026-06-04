@@ -4,6 +4,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "routes.h"
+#include "game_logger.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -147,6 +148,7 @@ static void go_to_next_route(StateMachine_t *sm)
     addToQueue(sm, &STATE_NAVIGATION);
     sm->isBusy = false;
 }
+extern volatile uint32_t puzzle_seconds_counter;
 
 void experience_entry(StateMachine_t *sm)
 {
@@ -226,6 +228,8 @@ void experience_main(StateMachine_t *sm)
             }
 
             return;
+            addToQueue(sm, &STATE_NAVIGATION);
+            sm->isBusy = false;
         }
     }
 }

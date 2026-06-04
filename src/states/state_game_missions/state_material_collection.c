@@ -4,6 +4,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "routes.h"
+#include "game_logger.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -286,6 +287,11 @@ void material_collection_main(StateMachine_t *sm)
             }
 
             return;
+
+        if (pressedKey == ENTER)
+        {
+            addToQueue(sm, &STATE_NAVIGATION);
+            sm->isBusy = false;
         }
     }
 }

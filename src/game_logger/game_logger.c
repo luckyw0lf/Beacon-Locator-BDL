@@ -1,14 +1,15 @@
 #include "game_logger.h"
 #include "ff.h" 
 #include <stdio.h>
+#include "routes.h"
 
-static uint32_t room_times[MAX_ROOMS];
+static uint32_t room_times[ROUTE_END];
 static FATFS fs;
 // this element use to count the time that kids spend on play game each state
 volatile uint32_t puzzle_seconds_counter = 0;
 volatile uint32_t systick_counter = 0; // using this element to count up the time
 
-static const char* room_names[MAX_ROOMS] = {
+static const char* room_names[ROUTE_END] = {
     "Experience Mission",
     "Material Question",
     "Material Collection",
@@ -16,7 +17,7 @@ static const char* room_names[MAX_ROOMS] = {
 };
 
 bool Logger_Init(void) {
-    for(int i = 0; i < MAX_ROOMS; i++) {
+    for(int i = 0; i < ROUTE_END; i++) {
         room_times[i] = 0;
     }
     // mouting the SD card
@@ -29,14 +30,14 @@ bool Logger_Init(void) {
     return true;
 }
 
-void Logger_Record_Time(RoomID_t room, uint32_t seconds) {
-    if (room < MAX_ROOMS) {
+void Logger_Record_Time(RouteId_t room, uint32_t seconds) {
+    if (room < ROUTE_END) {
         room_times[room] = seconds;
     }
 }
 
 void Logger_Respond_To_PC(void) {
-    for(int i = 0; i < MAX_ROOMS; i++) {
+    for(int i = 0; i < ROUTE_END; i++) {
         printf("LOG:%d:%lu\r\n", i, room_times[i]);
     }
 }
@@ -48,9 +49,8 @@ bool Logger_Save_Data(void) {
     // open gamelog.txt and save data 
     fr = f_open(&fil, "gamelog.txt", FA_WRITE | FA_OPEN_APPEND);
     if (fr != FR_OK) return false;
-
     f_printf(&fil, "--- NEW GAME SESSION ---\n");
-    for(int i = 0; i < MAX_ROOMS; i++) {
+    for(int i = 0; i < ROUTE_END; i++) {
         f_printf(&fil, "%s: %lu seconds\n", room_names[i], room_times[i]);
     }
     f_printf(&fil, "------------------------\n\n");

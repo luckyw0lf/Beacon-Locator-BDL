@@ -2,6 +2,7 @@
 #define ROUTES_H
 
 #include <stdint.h>
+#include "states.h"
 
 typedef enum
 {
@@ -33,7 +34,7 @@ typedef enum
     ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION,
     ROUTE_MATERIAL_QUESTION_TO_COLLECTION,
     ROUTE_COLLECTION_TO_BUILD_TEST,
-    ROUTE_UNKNOWN
+    ROUTE_END
 } RouteId_t;
 
 typedef struct
@@ -42,6 +43,9 @@ typedef struct
     const char *major;
     const char *minor;
     const char *label;
+    int rssi[3];
+    int rssiSize;
+    int index;
 } BeaconDefinition_t;
 
 typedef struct
@@ -50,9 +54,9 @@ typedef struct
     BeaconRole_t role;
     int rssiThreshold;
 
-    const char *line1;
-    const char *line2;
-    const char *line3;
+    char *line1;
+    char *line2;
+    char *line3;
 } RouteBeaconRule_t;
 
 typedef struct
@@ -66,12 +70,17 @@ typedef struct
 
     const RouteBeaconRule_t *rules;
     uint8_t ruleCount;
+    State_t *puzzleState;
+
 } RouteProfile_t;
 
 const BeaconDefinition_t *routes_get_beacon_definition(BeaconId_t beaconId);
-const BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor);
+BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor);
 
 const RouteProfile_t *routes_get_profile(RouteId_t routeId);
-const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, BeaconId_t beaconId);
+const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, char const *major, const char *minor);
+//getting data from GUI 
+void routes_update_beacon(const char* label, const char* major, const char* minor);
+void routes_dump_config(void);
 
 #endif

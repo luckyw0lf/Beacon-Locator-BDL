@@ -4,6 +4,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "routes.h"
+#include "game_logger.h"
 
 
 #include <stdio.h>
@@ -361,6 +362,8 @@ void material_question_main(StateMachine_t *sm)
             }
 
             return;
+            addToQueue(sm, &STATE_NAVIGATION);
+            sm->isBusy = false;
         }
     }
 }
