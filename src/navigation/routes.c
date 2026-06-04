@@ -53,8 +53,8 @@ const char beaconDefCount = 10;
  * 0006 = target room
  */
 const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Part desk", "Keep going", ""},
+    {BEACON_B01, BEACON_ROLE_PASS_BY,  -85, "Good direction", "Keep going", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -85, "Part desk", "Keep going", ""},
     {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
 };
 

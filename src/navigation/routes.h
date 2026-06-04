@@ -46,6 +46,7 @@ typedef struct
     int rssi[3];
     int rssiSize;
     int index;
+    int averageRssi;
 } BeaconDefinition_t;
 
 typedef struct
