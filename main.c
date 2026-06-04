@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <MCXA153.h>
+#include <string.h>
 
 #include "leds.h"
 #include "serial.h"
@@ -16,6 +17,8 @@
 #include "state_navigation.h"
 #include "state_game_missions.h"
 #include "state_game_intro.h"
+#include "game_logger.h"
+#include "beacon_parser.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -115,6 +118,15 @@ int main(void){
     // setup the Timer
     SysTick_Config(SystemCoreClock / 1000U);
     Logger_Respond_To_PC();
+
+    if (Logger_Save_Data() == true)
+    {
+        printf("SUCCESS: Log saved to SD Card!\r\n");
+    }
+    else
+    {
+        printf(">> Fail!\r\n");
+    }
     
     while(1)
     {
