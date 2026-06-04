@@ -4,6 +4,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "routes.h"
+#include "game_logger.h"
 
 #include <stdio.h>
 
