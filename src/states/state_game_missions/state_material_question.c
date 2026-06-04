@@ -41,10 +41,6 @@ void material_question_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
-            Logger_Record_Time(ROOM_QUESTION, puzzle_seconds_counter);
-            navigation_set_route(ROUTE_MATERIAL_QUESTION_TO_COLLECTION);
-            navigation_set_next_state(&STATE_MATERIAL_COLLECTION);
-
             addToQueue(sm, &STATE_NAVIGATION);
             sm->isBusy = false;
         }

@@ -5,6 +5,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "routes.h"
+#include "game_logger.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -22,6 +23,8 @@ extern const RouteProfile_t routeProfiles[];
 extern BeaconDefinition_t *recentBeacons[3];
 extern BeaconDefinition_t beaconDefinitions[];
 extern const char beaconDefCount;
+
+extern volatile uint32_t puzzle_seconds_counter;
 extern volatile uint32_t ms;
 
 static RouteId_t activeRouteId = ROUTE_START_TO_EXPERIENCE;
@@ -69,8 +72,10 @@ void navigation_main(StateMachine_t *sm)
             {
                 printf("Room arrival confirmed by player\r\n");
 
-                if(activeRouteId+1 <= ROUTE_END)
+                if(activeRouteId+1 <= ROUTE_END){
+                    Logger_Record_Time(activeRouteId, puzzle_seconds_counter);
                     addToQueue(sm, routeProfiles[activeRouteId+1].puzzleState);
+                }
                 else {
                     addToQueue(sm, &STATE_BOOT_MENU);
                     activeRouteId = ROUTE_START_TO_EXPERIENCE;
@@ -103,7 +108,6 @@ void navigation_main(StateMachine_t *sm)
         for(int x = 0; x < 3; x++){
 
             if(strcmp(recentBeacons[x]->minor, "H") == 0){
-                // breakpoint
                 continue;
             }
             const RouteBeaconRule_t *rule = routes_find_rule(
@@ -123,6 +127,9 @@ void navigation_main(StateMachine_t *sm)
             // printf("rule beaconid: %d", rule->beaconId);
             if (averageRssi > rule->rssiThreshold) {
                 show_game_message(rule->line1, rule->line2, rule->line3);
+
+                if(rule->role == BEACON_ROLE_TARGET)
+                    targetReached = true;
                 break;
             }
         }

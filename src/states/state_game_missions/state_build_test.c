@@ -140,8 +140,8 @@ void build_test_main(StateMachine_t *sm)
             {
                 printf("Final code correct\r\n");
                 //save finish time into SD card
-                Logger_Record_Time(ROOM_BUILD_TEST, puzzle_seconds_counter);           
-                
+                Logger_Record_Time(ROUTE_COLLECTION_TO_BUILD_TEST, puzzle_seconds_counter);           
+
                 show_correct_answer();
                 lock_open();
 

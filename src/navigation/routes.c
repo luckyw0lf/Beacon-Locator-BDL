@@ -36,7 +36,7 @@ static char set_labels[10][6] = {"B01", "B02", "B03", "B04", "B05", "B06", "B07"
  * B10 = minor 000A
  */
 
-static BeaconDefinition_t beaconDefinitions[] = {
+BeaconDefinition_t beaconDefinitions[] = {
     {BEACON_B01, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
     {BEACON_B02, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
     {BEACON_B03, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},

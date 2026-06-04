@@ -39,12 +39,9 @@ void material_collection_main(StateMachine_t *sm)
     {
         keypadFlag = false;
 
+
         if (pressedKey == ENTER)
         {
-            Logger_Record_Time(ROOM_COLLECTION, puzzle_seconds_counter);
-            navigation_set_route(ROUTE_COLLECTION_TO_BUILD_TEST);
-            navigation_set_next_state(&STATE_BUILD_TEST);
-
             addToQueue(sm, &STATE_NAVIGATION);
             sm->isBusy = false;
         }
