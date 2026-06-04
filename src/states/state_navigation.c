@@ -75,6 +75,7 @@ void navigation_main(StateMachine_t *sm)
                 if(activeRouteId+1 <= ROUTE_END){
                     Logger_Record_Time(activeRouteId, puzzle_seconds_counter);
                     addToQueue(sm, routeProfiles[activeRouteId+1].puzzleState);
+                    activeRouteId = (activeRouteId+1) % (ROUTE_END-1);
                 }
                 else {
                     addToQueue(sm, &STATE_BOOT_MENU);
