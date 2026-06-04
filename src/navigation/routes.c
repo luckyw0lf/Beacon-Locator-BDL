@@ -30,16 +30,16 @@ extern State_t STATE_FINISH;
  * B10 = minor 000A
  */
 BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0AEA", "0032", "B01", {-99, -99, -99}, 3, 0},
-    {BEACON_B02, "0AEA", "0026", "B02", {-99, -99, -99}, 3, 0},
-    {BEACON_B03, "0AEA", "0037", "B03", {-99, -99, -99}, 3, 0},
-    {BEACON_B04, "0B01", "0004", "B04", {-99, -99, -99}, 3, 0},
-    {BEACON_B05, "0B01", "0005", "B05", {-99, -99, -99}, 3, 0},
-    {BEACON_B06, "0B01", "0006", "B06", {-99, -99, -99}, 3, 0},
-    {BEACON_B07, "0B01", "0007", "B07", {-99, -99, -99}, 3, 0},
-    {BEACON_B08, "0B01", "0008", "B08", {-99, -99, -99}, 3, 0},
-    {BEACON_B09, "0B01", "0009", "B09", {-99, -99, -99}, 3, 0},
-    {BEACON_B10, "0B01", "000A", "B10", {-99, -99, -99}, 3, 0}
+    {BEACON_B01, "0AEA", "0032", "B01", {-86, -86, -86}, 3, 0},
+    {BEACON_B02, "0AEA", "0026", "B02", {-86, -86, -86}, 3, 0},
+    {BEACON_B03, "0AEA", "0037", "B03", {-86, -86, -86}, 3, 0},
+    {BEACON_B04, "0B01", "0004", "B04", {-86, -86, -86}, 3, 0},
+    {BEACON_B05, "0B01", "0005", "B05", {-86, -86, -86}, 3, 0},
+    {BEACON_B06, "0B01", "0006", "B06", {-86, -86, -86}, 3, 0},
+    {BEACON_B07, "0B01", "0007", "B07", {-86, -86, -86}, 3, 0},
+    {BEACON_B08, "0B01", "0008", "B08", {-86, -86, -86}, 3, 0},
+    {BEACON_B09, "0B01", "0009", "B09", {-86, -86, -86}, 3, 0},
+    {BEACON_B10, "0B01", "000A", "B10", {-86, -86, -86}, 3, 0}
 };
 
 const char beaconDefCount = 10;
@@ -53,8 +53,8 @@ const char beaconDefCount = 10;
  * 0006 = target room
  */
 const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Part desk", "Keep going", ""},
+    {BEACON_B01, BEACON_ROLE_PASS_BY,   -85, "Good direction", "Keep going", "Right from corridor"},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -80, "Part desk", "Target on right", ""},
     {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
 };
 
@@ -66,9 +66,9 @@ const RouteBeaconRule_t startToExperienceRules[] = {
  * 0003 is the target room.
  */
 const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
-    {BEACON_B05, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B04, BEACON_ROLE_APPROACH, -70, "You are close", "Keep going", ""},
-    {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Question room", "Reached", "Press ENTER"}
+    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Go forward", "Find desk", ""},
+    {BEACON_B02, BEACON_ROLE_APPROACH, -75, "You are close", "N**ga", ""},
+    {BEACON_B01, BEACON_ROLE_TARGET,   -75, "Question room", "Reached", "Press ENTER"}
 };
 
 /*
@@ -81,11 +81,11 @@ const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
  * 000A is the target room.
  */
 const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
-    {BEACON_B04, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
-    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
-    {BEACON_B08, BEACON_ROLE_PASS_BY, -65, "Turn left", "From corridor", ""},
-    {BEACON_B09, BEACON_ROLE_PASS_BY, -65, "Right track", "Keep going", ""},
-    {BEACON_B10, BEACON_ROLE_TARGET,  -65, "Material room", "Reached", "Press ENTER"}
+    {BEACON_B01, BEACON_ROLE_PASS_BY, -85, "Go back ", "Keep going", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
+    //{BEACON_B08, BEACON_ROLE_PASS_BY, -65, "Turn left", "From corridor", ""},
+    //{BEACON_B09, BEACON_ROLE_PASS_BY, -65, "Right track", "Keep going", ""},
+    {BEACON_B03, BEACON_ROLE_TARGET,  -75, "Material room", "Reached", "Press ENTER"}
 };
 
 /*
@@ -97,9 +97,9 @@ const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
  * 0008 is  the final target.
  */
 const RouteBeaconRule_t collectionToBuildTestRules[] = {
-    {BEACON_B09, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
-    {BEACON_B07, BEACON_ROLE_PASS_BY, -65, "Turn left", "Room is nearby", ""},
-    {BEACON_B08, BEACON_ROLE_TARGET,  -65, "Final room", "Reached", "Press ENTER"}
+    {BEACON_B03, BEACON_ROLE_PASS_BY, -75, "skkkkkrt", "Keep going", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY, -75, "Turn left papa", "Room is nearby", ""},
+    {BEACON_B01, BEACON_ROLE_TARGET,  -75, "Final room", "Reached", "Press ENTER"}
 };
 
 const RouteProfile_t routeProfiles[] = {
