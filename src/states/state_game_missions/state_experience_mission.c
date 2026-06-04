@@ -14,6 +14,8 @@ extern State_t STATE_MATERIAL_QUESTION;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+extern volatile uint32_t puzzle_seconds_counter;
+
 void experience_entry(StateMachine_t *sm)
 {
     printf("ENTER EXPERIENCE_MISSION\r\n");
@@ -39,6 +41,7 @@ void experience_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
+            Logger_Record_Time(ROOM_EXPERIENCE, puzzle_seconds_counter);
             navigation_set_route(ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION);
             navigation_set_next_state(&STATE_MATERIAL_QUESTION);
 
