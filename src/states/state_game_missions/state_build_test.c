@@ -3,6 +3,7 @@
 #include "keypad.h"
 #include "oled.h"
 #include "lock.h"
+#include "game_logger.h"
 
 #include <stdio.h>
 #include <string.h>
