@@ -34,7 +34,7 @@ static uint8_t answerLength = 0;
 
 static void delay_short(void)
 {
-    for (volatile int i = 0; i < 8000000; i++)
+    for (volatile int i = 0; i < 6000000; i++)
     {
     }
 }
@@ -86,10 +86,13 @@ static void show_intro_page_1(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Hidden papers");
+    oled_puts("Verborgen");
 
     oled_set_cursor(0, 2);
-    oled_puts("are in room");
+    oled_puts("papieren");
+
+    oled_set_cursor(0, 4);
+    oled_puts("zijn in kamer");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -100,13 +103,13 @@ static void show_intro_page_2(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Find papers");
+    oled_puts("Vind papieren");
 
     oled_set_cursor(0, 2);
-    oled_puts("with air valve");
+    oled_puts("met ventiel");
 
     oled_set_cursor(0, 4);
-    oled_puts("part pictures");
+    oled_puts("onderdelen");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -117,16 +120,14 @@ static void show_intro_page_3(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Discover digits");
+    oled_puts("Ontdek code");
 
     oled_set_cursor(0, 2);
-    oled_puts("Enter 3 digit");
+    oled_puts("Voer 3 cijfers in");
 
-    oled_set_cursor(0, 4);
-    oled_puts("code");
 
     oled_set_cursor(0, 6);
-    oled_puts("Press 1");
+    oled_puts("Druk op 1");
 }
 
 static void show_input_page(void)
@@ -134,7 +135,7 @@ static void show_input_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("What is code?");
+    oled_puts("Wat is code?");
 
     oled_set_cursor(0, 3);
     oled_puts("Code:");
@@ -142,7 +143,7 @@ static void show_input_page(void)
     oled_puts("_");
 
     oled_set_cursor(0, 6);
-    oled_puts("ENTER submit");
+    oled_puts("ENTER klaar");
 }
 
 static void show_need_three_digits(void)
@@ -150,10 +151,10 @@ static void show_need_three_digits(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Need 3 digits");
+    oled_puts("3 cijfers nodig");
 
     oled_set_cursor(0, 2);
-    oled_puts("Try again");
+    oled_puts("Probeer weer");
 }
 
 static void show_wrong_order(void)
@@ -161,13 +162,13 @@ static void show_wrong_order(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Right digits");
+    oled_puts("Juiste cijfers");
 
     oled_set_cursor(0, 2);
-    oled_puts("Wrong order");
+    oled_puts("Foute volgorde");
 
     oled_set_cursor(0, 4);
-    oled_puts("Try again");
+    oled_puts("Probeer weer");
 }
 
 static void show_wrong_answer(void)
@@ -175,13 +176,13 @@ static void show_wrong_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Wrong code");
+    oled_puts("Foute code");
 
     oled_set_cursor(0, 2);
-    oled_puts("Look again");
+    oled_puts("Kijk opnieuw");
 
     oled_set_cursor(0, 4);
-    oled_puts("Check papers");
+    oled_puts("Check papieren");
 }
 
 static void show_correct_answer(void)
@@ -189,13 +190,13 @@ static void show_correct_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Correct!");
+    oled_puts("Juist!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Good job");
+    oled_puts("Goed gedaan");
 
     oled_set_cursor(0, 5);
-    oled_puts("Next route");
+    oled_puts("Volgende route");
 }
 
 static bool has_correct_digits_wrong_order(void)

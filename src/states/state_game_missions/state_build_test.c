@@ -37,13 +37,12 @@ static void show_intro_page_1(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Now its time");
+    oled_puts("Nu gaan we");
 
     oled_set_cursor(0, 2);
-    oled_puts("to build valve");
+    oled_puts("het ventiel bouwen");
 
-    oled_set_cursor(0, 4);
-    oled_puts("You did good");
+  
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -54,16 +53,16 @@ static void show_build_help_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Get help to");
+    oled_puts("Vraag hulp");
 
     oled_set_cursor(0, 2);
-    oled_puts("build valve");
+    oled_puts("bouw ventiel");
 
     oled_set_cursor(0, 4);
-    oled_puts("Then test it!");
+    oled_puts("Test daarna");
 
     oled_set_cursor(0, 6);
-    oled_puts("Press 1 done");
+    oled_puts("Druk op 1");
 }
 
 static void show_congrats_page(void)
@@ -71,16 +70,16 @@ static void show_congrats_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Congrats!");
+    oled_puts("Gefeliciteerd!");
 
     oled_set_cursor(0, 2);
-    oled_puts("You built a");
+    oled_puts("Je hebt een  ");
 
     oled_set_cursor(0, 3);
-    oled_puts("working valve");
+    oled_puts("ventiel gebouwd");
 
     oled_set_cursor(0, 5);
-    oled_puts("Like engineer!");
+    oled_puts("als een engineer!");
 
     oled_set_cursor(0, 7);
     oled_puts("ENTER");
@@ -91,13 +90,13 @@ static void show_final_question(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Final question:");
+    oled_puts("Laatste vraag:");
 
     oled_set_cursor(0, 2);
-    oled_puts("How many parts");
+    oled_puts("Hoeveel delen");
 
     oled_set_cursor(0, 3);
-    oled_puts("used in valve?");
+    oled_puts("in ventiel?");
 
     oled_set_cursor(0, 6);
     oled_puts("Code: ");
@@ -110,10 +109,10 @@ static void show_wrong_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Wrong code");
+    oled_puts("Foute code");
 
     oled_set_cursor(0, 2);
-    oled_puts("Try again");
+    oled_puts("Probeer weer");
 
     oled_set_cursor(0, 5);
     oled_puts("Code: _");
@@ -124,13 +123,13 @@ static void show_correct_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Correct!");
+    oled_puts("Goed!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Box opening...");
+    oled_puts("Doos opent...");
 
     oled_set_cursor(0, 5);
-    oled_puts("Well done");
+    oled_puts("Knap gedaan");
 }
 
 static char key_to_digit(uint16_t key)

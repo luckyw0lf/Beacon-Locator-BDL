@@ -38,7 +38,7 @@ static uint8_t selectedAnswer = 0;
 
 static void delay_short(void)
 {
-    for (volatile int i = 0; i < 8000000; i++)
+    for (volatile int i = 0; i < 6000000; i++)
     {
     }
 }
@@ -48,13 +48,13 @@ static void show_intro_page_1(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Find all valve");
+    oled_puts("Vind alle");
 
     oled_set_cursor(0, 2);
-    oled_puts("parts");
+    oled_puts("ventiel delen");
 
     oled_set_cursor(0, 4);
-    oled_puts("Total: 9 parts");
+    oled_puts("Totaal: 9 delen");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -65,16 +65,16 @@ static void show_intro_page_2(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Use papers");
+    oled_puts("Gebruik de ");
 
     oled_set_cursor(0, 2);
-    oled_puts("you found");
+    oled_puts("papieren");
 
     oled_set_cursor(0, 4);
-    oled_puts("for the parts");
+    oled_puts("voor de delen");
 
     oled_set_cursor(0, 6);
-    oled_puts("Press 1 ready");
+    oled_puts("Druk op 1");
 }
 
 static void show_scale_info_page(void)
@@ -82,13 +82,13 @@ static void show_scale_info_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Congrats!");
+    oled_puts("Goed gedaan!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Find the scale");
+    oled_puts("Vind de weegschaal");
 
     oled_set_cursor(0, 4);
-    oled_puts("Weigh pieces");
+    oled_puts("Weeg alle delen");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -99,10 +99,10 @@ static void show_ready_input_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("There is your");
+    oled_puts("Heb jij de ");
 
     oled_set_cursor(0, 2);
-    oled_puts("answer");
+    oled_puts("antwoord? ");
 
     oled_set_cursor(0, 5);
     oled_puts("Press 1 submit");
@@ -113,7 +113,7 @@ static void show_question_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Whats weight?");
+    oled_puts("Wat weegt het?");
 
     oled_set_cursor(0, 2);
 
@@ -146,7 +146,7 @@ static void show_question_page(void)
     }
 
     oled_set_cursor(0, 6);
-    oled_puts("ENTER select");
+    oled_puts("ENTER kies");
 }
 
 static void show_wrong_answer(void)
@@ -154,13 +154,13 @@ static void show_wrong_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Wrong weight");
+    oled_puts("Fout gewicht");
 
     oled_set_cursor(0, 2);
-    oled_puts("Try again");
+    oled_puts("Probeer weer");
 
     oled_set_cursor(0, 4);
-    oled_puts("Check scale");
+    oled_puts("Check schaal");
 }
 
 static void show_correct_answer(void)
@@ -168,13 +168,13 @@ static void show_correct_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Correct!");
+    oled_puts("Goed!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Weight ok");
+    oled_puts("Gewicht klopt");
 
     oled_set_cursor(0, 5);
-    oled_puts("Next route");
+    oled_puts("Volgende route");
 }
 
 static void go_to_next_route(StateMachine_t *sm)

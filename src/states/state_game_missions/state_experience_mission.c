@@ -34,7 +34,7 @@ static uint8_t selectedAnswer = 0;
 
 static void delay_short(void)
 {
-    for (volatile int i = 0; i < 1000000; i++)
+    for (volatile int i = 0; i < 5000000; i++)
     {
     }
 }
@@ -44,13 +44,13 @@ static void show_intro_page_1(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Mission:");
+    oled_puts("Missie:");
 
     oled_set_cursor(0, 2);
-    oled_puts("Build an");
+    oled_puts("Bouw een");
 
     oled_set_cursor(0, 3);
-    oled_puts("air valve");
+    oled_puts("luchtventiel");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -61,13 +61,13 @@ static void show_intro_page_2(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Find parts");
+    oled_puts("Vind delen");
 
     oled_set_cursor(0, 2);
-    oled_puts("Assemble valve");
+    oled_puts("Zet ze samen");
 
     oled_set_cursor(0, 4);
-    oled_puts("Then test it");
+    oled_puts("Test daarna");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -78,40 +78,40 @@ static void show_question_page(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("What building?");
+    oled_puts("Wat bouw je?");
 
     oled_set_cursor(0, 2);
 
     if (selectedAnswer == 0)
     {
-        oled_puts(">1 Sensor  2 Valve");
+        oled_puts(">1 Sensor 2 Vent.");
     }
     else if (selectedAnswer == 1)
     {
-        oled_puts(" 1 Sensor >2 Valve");
+        oled_puts(" 1 Sensor >2 Vent.");
     }
     else
     {
-        oled_puts(" 1 Sensor  2 Valve");
+        oled_puts(" 1 Sensor  2 Vent");
     }
 
     oled_set_cursor(0, 4);
 
     if (selectedAnswer == 2)
     {
-        oled_puts(">3 Display 4 Battery");
+        oled_puts(">3 Scherm  4 Accu");
     }
     else if (selectedAnswer == 3)
     {
-        oled_puts(" 3 Display >4 Battery");
+        oled_puts(" 3 Scherm >4 Accu");
     }
     else
     {
-        oled_puts(" 3 Display 4 Battery");
+        oled_puts(" 3 Scherm 4 Accu");
     }
 
     oled_set_cursor(0, 6);
-    oled_puts("ENTER select");
+    oled_puts("ENTER kies");
 }
 
 static void show_wrong_answer(void)
@@ -119,10 +119,10 @@ static void show_wrong_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Wrong");
+    oled_puts("Fout antwoord");
 
     oled_set_cursor(0, 2);
-    oled_puts("Try again");
+    oled_puts("Probeer weer");
 }
 
 static void show_correct_answer(void)
@@ -130,13 +130,13 @@ static void show_correct_answer(void)
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("Correct!");
+    oled_puts("Goed!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Air valve");
+    oled_puts("luchtventiel");
 
     oled_set_cursor(0, 5);
-    oled_puts("Next route");
+    oled_puts("Volgende route");
 }
 
 static void go_to_next_route(StateMachine_t *sm)
