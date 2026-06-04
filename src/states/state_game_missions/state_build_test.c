@@ -12,7 +12,7 @@ extern State_t STATE_FINISH;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
-
+extern volatile uint32_t puzzle_seconds_counter;
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -138,7 +138,9 @@ void build_test_main(StateMachine_t *sm)
             if (strcmp(answerBuffer, "9") == 0)
             {
                 printf("Final code correct\r\n");
-
+                //save finish time into SD card
+                Logger_Record_Time(ROOM_BUILD_TEST, puzzle_seconds_counter);           
+                
                 show_correct_answer();
                 lock_open();
 
