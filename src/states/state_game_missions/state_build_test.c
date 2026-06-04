@@ -2,6 +2,7 @@
 
 #include "keypad.h"
 #include "oled.h"
+#include "lock.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,23 +12,7 @@ extern State_t STATE_FINISH;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
-/*
- 
-  Replace this function with the real electronic lock control.
-
- */
-static void open_lock(void)
-{
-    printf("LOCK OPEN COMMAND\r\n");
-
-    /*
-     Example placeholder:
-     
-      GPIOx->PSOR = (1 << LOCK_PIN);
-      delay...
-      GPIOx->PCOR = (1 << LOCK_PIN);
-     */
-}
+extern volatile uint32_t puzzle_seconds_counter;
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -153,9 +138,11 @@ void build_test_main(StateMachine_t *sm)
             if (strcmp(answerBuffer, "9") == 0)
             {
                 printf("Final code correct\r\n");
-
+                //save finish time into SD card
+                Logger_Record_Time(ROOM_BUILD_TEST, puzzle_seconds_counter);           
+                
                 show_correct_answer();
-                open_lock();
+                lock_open();
 
                 addToQueue(sm, &STATE_FINISH);
                 sm->isBusy = false;

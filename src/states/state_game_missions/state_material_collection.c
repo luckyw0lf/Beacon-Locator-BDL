@@ -13,6 +13,8 @@ extern State_t STATE_BUILD_TEST;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+extern volatile uint32_t puzzle_seconds_counter;
+
 void material_collection_entry(StateMachine_t *sm)
 {
     printf("ENTER MATERIAL_COLLECTION\r\n");
@@ -38,6 +40,10 @@ void material_collection_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
+            Logger_Record_Time(ROOM_COLLECTION, puzzle_seconds_counter);
+            navigation_set_route(ROUTE_COLLECTION_TO_BUILD_TEST);
+            navigation_set_next_state(&STATE_BUILD_TEST);
+
             addToQueue(sm, &STATE_NAVIGATION);
             sm->isBusy = false;
         }

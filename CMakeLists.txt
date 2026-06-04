@@ -66,6 +66,8 @@ mcux_add_source(
             src/navigation/routes.h
             src/hm10/hm10.c
             src/hm10/hm10.h
+            src/lock/lock.c
+            src/lock/lock.h
             src/helperFunctions.c
             src/helperFunctions.h
             src/keypad.c
@@ -92,6 +94,7 @@ mcux_add_include(
              src/states/state_game_missions
              src/beacon
              src/navigation
+             src/lock
              src/hm10
 )
 mcux_convert_binary(BINARY ${APPLICATION_BINARY_DIR}/${MCUX_SDK_PROJECT_NAME}.bin)

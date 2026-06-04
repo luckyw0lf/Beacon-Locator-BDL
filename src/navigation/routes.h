@@ -79,4 +79,8 @@ BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const c
 
 const RouteProfile_t *routes_get_profile(RouteId_t routeId);
 const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, char const *major, const char *minor);
+//getting data from GUI 
+void routes_update_beacon(const char* label, const char* major, const char* minor);
+void routes_dump_config(void);
+
 #endif
