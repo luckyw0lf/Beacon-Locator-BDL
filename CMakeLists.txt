@@ -38,8 +38,6 @@ mcux_add_source(
             lib/mpr121/mpr121.h
             lib/serial2lpuart/lpuart2.c
             lib/serial2lpuart/lpuart2.h
-            lib/system_timer/system_timer.c
-            lib/system_timer/system_timer.h
 
             main.c
             src/states.c
@@ -54,7 +52,6 @@ mcux_add_source(
             src/states/state_game_missions/state_material_collection.c
             src/states/state_game_missions/state_build_test.c
             src/states/state_game_missions/state_finish.c
-
             src/states/state_menu.c
             src/states/state_menu.h
             src/beacon/beacon_parser.c

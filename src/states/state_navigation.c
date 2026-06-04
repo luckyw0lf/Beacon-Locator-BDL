@@ -18,6 +18,8 @@ extern State_t STATE_EXPERIENCE_MISSION;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+// this element will then be changed to another state
+// via the navigation_set_route function
 static RouteId_t activeRouteId = ROUTE_START_TO_EXPERIENCE;
 static State_t *nextStateAfterNavigation = 0;
 
@@ -72,6 +74,7 @@ void navigation_entry(StateMachine_t *sm)
 {
     const RouteProfile_t *activeProfile = routes_get_profile(activeRouteId);
 
+    // this function will be skipped on the next states
     if (nextStateAfterNavigation == 0)
     {
         nextStateAfterNavigation = &STATE_EXPERIENCE_MISSION;
@@ -123,7 +126,7 @@ void navigation_main(StateMachine_t *sm)
         {
             if (strstr(raw_beacon_string, "OK+DISCE") != NULL)
             {
-                hm10_send_command("AT+DISI?");
+                hm10_send_command("AT+DISI?");  
             }
             else if (parse_beacon_string(raw_beacon_string, &targetBeacon) == true)
             {
@@ -136,7 +139,7 @@ void navigation_main(StateMachine_t *sm)
                         const RouteProfile_t *activeProfile = routes_get_profile(activeRouteId);
                         const RouteBeaconRule_t *rule = routes_find_rule(activeProfile, foundDef->id);
 
-                        if (rule != 0)
+                        if (rule != 0)  
                         {
                             int raw_rssi = atoi(targetBeacon.rssi);
                             int targetAvgRssi = get_averaged_rssi(raw_rssi); 
@@ -159,6 +162,9 @@ void navigation_main(StateMachine_t *sm)
                                     oled_clear();
                                     oled_set_cursor(0, 0);
                                     oled_puts("LOCATION FOUND");
+
+                                    //print this line abo
+                                    printf("LOCATION FOUND");
                                     oled_set_cursor(0, 3);
                                     oled_puts("PRESS ENTER");
                                     oled_set_cursor(0, 5);

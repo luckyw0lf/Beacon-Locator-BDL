@@ -4,6 +4,9 @@
 
 static uint32_t room_times[MAX_ROOMS];
 static FATFS fs;
+// this element use to count the time that kids spend on play game each state
+volatile uint32_t puzzle_seconds_counter = 0;
+volatile uint32_t systick_counter = 0; // using this element to count up the time
 
 static const char* room_names[MAX_ROOMS] = {
     "Experience Mission",
@@ -19,7 +22,7 @@ bool Logger_Init(void) {
     // mouting the SD card
     FRESULT fr = f_mount(&fs, "", 1); 
     if (fr != FR_OK) {
-        printf("ERROR: SD Mount Failed! Code: %d\r\n", fr);
+        printf("\nERROR: SD Mount Failed! Code: %d\r\n", fr);
         return false;
     }
     printf("SUCCESS: SD Card Mounted!\r\n");
@@ -38,12 +41,12 @@ void Logger_Respond_To_PC(void) {
     }
 }
 
-bool Logger_Export_Data(void) {
+bool Logger_Save_Data(void) {
     FIL fil;
     FRESULT fr;
 
     // open gamelog.txt and save data 
-    fr = f_open(&fil, "gamelog.txt", FA_WRITE | FA_OPEN_APPEND);
+    fr = f_open(&fil, "gamelog.txt", FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
     if (fr != FR_OK) return false;
 
     f_printf(&fil, "--- NEW GAME SESSION ---\n");
@@ -53,6 +56,6 @@ bool Logger_Export_Data(void) {
     f_printf(&fil, "------------------------\n\n");
 
     f_close(&fil);
-    printf("SUCCESS: Log saved to SD Card!\r\n");
+    // printf("SUCCESS: Log saved to SD Card!\r\n");
     return true;
 }

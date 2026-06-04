@@ -1,81 +1,26 @@
 #include "routes.h"
 #include <string.h>
+#include <stdio.h>
+#include "ff.h"
 
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
-/*
-  Route and beacon configuration
- 
-  This file separates two concepts:
- 
-  1. Physical beacon identity
-  2. Beacon meaning inside a route
- 
-  A physical beacon is identified by its iBeacon major/minor values.
-  In the code, we give each physical beacon a stable internal ID:
- 
-      BEACON_B01
-      BEACON_B02
-      BEACON_B03
- 
-  Example:
- 
-      BEACON_B01 = major 0B01, minor 0003
- 
-  These values come from the actual beacon configuration or from
-  scanning the beacon with the HM-10 module.
- 
-  A route profile does not define what a beacon physically is.
-  Instead, it defines what that beacon means during one specific route.
- 
-  Example:
+static char set_majors[10][6] = {"", "", "", "", "", "", "", "", "", ""};
+static char set_minors[10][6] = {"", "", "", "", "", "", "", "", "", ""};
+static char set_labels[10][6] = {"B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10"};
 
-      In route A:
-          B01 = TARGET
-          B02 = PASS_BY
- 
-      In route B:
-          B01 = PASS_BY
-          B02 = TARGET
- 
-  
-  The same physical beacon can have a different role depending on the
-  active route.
- */
-
-
-
-/*
-  Beacon registry
- 
- 
-  This table defines the physical beacons.
- 
-  The label B01/B02/B03 is our internal name.
-  The major/minor values are the real iBeacon identifiers.
- 
-  If the beacon configuration changes, update the major/minor values here.
-  The route profiles can stay the same as long as B01, B02, B03 still
-  represent the same physical locations.
- */
-static const BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0B01", "0003", "B01"},
-    {BEACON_B02, "0AEA", "0037", "B02"},
-    {BEACON_B03, "0AEA", "0032", "B03"},
-
-    /*
-      Placeholder beacons.
-     
-     */
-    {BEACON_B04, "0000", "0000", "B04"},
-    {BEACON_B05, "0000", "0000", "B05"},
-    {BEACON_B06, "0000", "0000", "B06"},
-    {BEACON_B07, "0000", "0000", "B07"},
-    {BEACON_B08, "0000", "0000", "B08"},
-    {BEACON_B09, "0000", "0000", "B09"},
-    {BEACON_B10, "0000", "0000", "B10"}
+static BeaconDefinition_t beaconDefinitions[] = {
+    {BEACON_B01, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B02, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B03, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B04, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B05, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B06, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B07, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B08, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B09, set_majors[0], set_minors[0], set_labels[0]},
+    {BEACON_B10, set_majors[0], set_minors[0], set_labels[0]},
 };
-
 /*
   Route rules
  
@@ -238,4 +183,62 @@ const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, BeaconI
     }
 
     return 0;
+}
+
+void routes_update_beacon(const char* label, const char* major, const char* minor)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (strcmp(set_labels[i], label) == 0) 
+        {
+            strcpy(set_majors[i], major);
+            strcpy(set_minors[i], minor);
+            break; 
+        }
+    }
+}
+//checking if the beacon addresses are pushed to the box
+void routes_dump_config(void)
+{
+    printf("check address\r\n");
+    for (int i = 0; i < 10; i++)
+    {
+        printf("Slot %d - %s | Maj: %s | Min: %s\r\n", 
+               i, set_labels[i], set_majors[i], set_minors[i]);
+    }
+}
+
+void routes_save_config(void)
+{
+    FIL cfg_file;
+   if (f_open(&cfg_file, "config.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
+    {
+        for (int i = 0; i < 10; i++) 
+        {
+            f_printf(&cfg_file, "%s|%s|%s\n", set_labels[i], set_majors[i], set_minors[i]);
+        }
+        f_close(&cfg_file);
+    } 
+}
+
+void routes_load_config(void)
+{
+    FIL cfg_file;
+    char line_buffer[50];
+
+    if (f_open(&cfg_file, "config.txt", FA_READ) == FR_OK) 
+    {
+        int i = 0;
+        while (f_gets(line_buffer, sizeof(line_buffer), &cfg_file) != NULL && i < 10) 
+        {
+            char label[10] = {0}, major[10] = {0}, minor[10] = {0};
+            if (sscanf(line_buffer, "%[^|]|%[^|]|%s", label, major, minor) >= 2) 
+            {
+                strcpy(set_majors[i], major);
+                strcpy(set_minors[i], minor);
+            }
+            i++;
+        }
+        f_close(&cfg_file);
+    } 
 }

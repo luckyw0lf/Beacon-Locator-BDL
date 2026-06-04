@@ -63,6 +63,7 @@ void menu_main(StateMachine_t *sm){
             
         }
         printMenu();
+        
     }
     sm->isBusy = false;
 }

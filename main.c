@@ -32,9 +32,8 @@ int pc_rx_index = 0;
 
 StateMachine_t sm;
 
-// this element use to count the time that kids spend on play game each state
-volatile uint32_t puzzle_seconds_counter = 0;
-volatile uint32_t systick_counter = 0; // using this element to count up the time
+extern volatile uint32_t puzzle_seconds_counter;
+extern volatile uint32_t systick_counter;
 
 extern char keypadFlag;
 extern uint16_t pressedKey;
@@ -60,13 +59,6 @@ State_t STATE_NAVIGATION = {
     &navigation_main,
     &navigation_exit,
     "SEARCHING_BEACON"};
-
-// State_t STATE_GAME_INTRO = {
-//     &game_intro_entry,
-//     &game_intro_main,
-//     &game_intro_exit,
-//     "GAME_INTRO"
-// };
 
 State_t STATE_EXPERIENCE_MISSION = {
     &experience_entry,
@@ -109,14 +101,49 @@ static unsigned char touch_ms_delay = 20;
 // Main application
 int main(void)
 {
+
     initStateMachine(&systemSM, &STATE_INIT);
     serial_init(115200);
-    hm10_init(9600);
-    initKeypad();
-    Logger_Init();
 
-    //setup the Timer
+    // wait for the SD module to put the data
+    for (volatile uint32_t i = 0; i < 2000000; i++)
+    {
+        __asm("nop");
+    }
+
+    if (Logger_Init() == true)
+    {
+        routes_load_config();
+    }
+
+    // setup the Timer
     SysTick_Config(SystemCoreClock / 1000U);
+
+    // // just the simulation to test the SD card
+    // puzzle_seconds_counter = 45;
+    // Logger_Record_Time(ROOM_EXPERIENCE, puzzle_seconds_counter);
+
+    // puzzle_seconds_counter = 120;
+    // Logger_Record_Time(ROOM_QUESTION, puzzle_seconds_counter);
+
+    // puzzle_seconds_counter = 300;
+    // Logger_Record_Time(ROOM_COLLECTION, puzzle_seconds_counter);
+
+    // puzzle_seconds_counter = 15;
+    // Logger_Record_Time(ROOM_BUILD_TEST, puzzle_seconds_counter);
+
+    printf(">> sending data to PC:\r\n");
+    Logger_Respond_To_PC();
+    printf(">> writing data to the SD\r\n");
+
+    if (Logger_Save_Data() == true)
+    {
+        printf("SUCCESS: Log saved to SD Card!\r\n");
+    }
+    else
+    {
+        printf(">> Fail!\r\n");
+    }
 
     while (1)
     {
@@ -130,29 +157,50 @@ int main(void)
         }
         updateStateMachine(&systemSM);
 
-        char c = serial_rxcnt();
-
-        pc_rx_buffer[pc_rx_index++] = c;
-        
-        //reading the data received from GUI
-        if (serial_rxcnt() > 0)
+        if (systemSM.state == &STATE_BOOT_MENU ||
+            systemSM.state == &STATE_ADMIN_MODE ||
+            systemSM.state == &STATE_INIT)
         {
-            char c = (char)serial_getchar(); 
-
-            pc_rx_buffer[pc_rx_index++] = c;
-
-            if (c == '\n' || c == '\r' || pc_rx_index >= 49)
+            // reading the data received from GUI
+            if (serial_rxcnt() > 0)
             {
-                pc_rx_buffer[pc_rx_index] = '\0';
+                char c = (char)serial_getchar();
 
-                // reading the request from GUI to get data from SD card
-                if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
+                pc_rx_buffer[pc_rx_index++] = c;
+
+                if (c == '\n' || c == '\r' || pc_rx_index >= 49)
                 {
-                    Logger_Respond_To_PC();
-                }
+                    pc_rx_buffer[pc_rx_index] = '\0';
+                    // receiving request to push data in SD card
+                    if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
+                    {
+                        Logger_Respond_To_PC();
+                    }
+                    // getting request to receive beacon addresses
+                    else if (strstr(pc_rx_buffer, "<CFG|") != NULL)
+                    {
+                        char label[10] = {0};
+                        char major[10] = {0};
+                        char minor[10] = {0};
 
-                memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
-                pc_rx_index = 0;
+                        if (sscanf(pc_rx_buffer, "<CFG|%9[^|]|%9[^|]|%9[^>]>", label, major, minor) == 3)
+                        {
+                            routes_update_beacon(label, major, minor);
+                        }
+                    }
+                    else if (strstr(pc_rx_buffer, "check") != NULL)
+                    {
+                        routes_dump_config();
+                    }
+                    else if (strstr(pc_rx_buffer, "end") != NULL)
+                    {
+                        printf("BOX: Configuration pushed successfully!\r\n");
+                        routes_save_config();
+                    }
+
+                    memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
+                    pc_rx_index = 0;
+                }
             }
         }
     }

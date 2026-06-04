@@ -66,4 +66,12 @@ const BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, c
 const RouteProfile_t *routes_get_profile(RouteId_t routeId);
 const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, BeaconId_t beaconId);
 
+//getting data from GUI 
+void routes_update_beacon(const char* label, const char* major, const char* minor);
+void routes_dump_config(void);
+
+// saving beacon address to SD card
+void routes_save_config(void);
+void routes_load_config(void);
+
 #endif
