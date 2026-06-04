@@ -182,9 +182,6 @@ static void go_to_next_route(StateMachine_t *sm)
 {
     // Logger_Record_Time(ROOM_COLLECTION, puzzle_seconds_counter);
 
-    navigation_set_route(ROUTE_COLLECTION_TO_BUILD_TEST);
-    navigation_set_next_state(&STATE_BUILD_TEST);
-
     addToQueue(sm, &STATE_NAVIGATION);
     sm->isBusy = false;
 }
@@ -295,7 +292,7 @@ void material_collection_main(StateMachine_t *sm)
         }
     }
 }
-
+}
 void material_collection_exit(StateMachine_t *sm)
 {
     oled_clear();

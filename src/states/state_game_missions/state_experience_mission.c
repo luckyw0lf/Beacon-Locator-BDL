@@ -142,9 +142,6 @@ static void show_correct_answer(void)
 
 static void go_to_next_route(StateMachine_t *sm)
 {
-    navigation_set_route(ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION);
-    navigation_set_next_state(&STATE_MATERIAL_QUESTION);
-
     addToQueue(sm, &STATE_NAVIGATION);
     sm->isBusy = false;
 }
