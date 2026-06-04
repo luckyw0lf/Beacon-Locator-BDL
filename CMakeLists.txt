@@ -71,7 +71,14 @@ mcux_add_source(
             src/helperFunctions.c
             src/helperFunctions.h
             src/keypad.c
-            src/keypad.h
+            src/keypad.h 
+            src/game_logger/game_logger.h
+            src/game_logger/game_logger.c
+            src/game_logger/diskio.h
+            src/game_logger/diskio.c
+            src/game_logger/ff.h
+            src/game_logger/ff.c
+            src/game_logger/ffconf.h
            
             
 )
@@ -88,8 +95,9 @@ mcux_add_include(
              lib/mpr121
              lib/serial2lpuart
              lib/sll
+             
              src
-          
+             src/game_logger
              src/states
              src/states/state_game_missions
              src/beacon
