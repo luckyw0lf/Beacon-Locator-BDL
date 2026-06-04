@@ -6,6 +6,7 @@
 #include "oled.h"
 #include "routes.h"
 #include "game_logger.h"
+#include "lpuart2.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -26,6 +27,9 @@ extern const char beaconDefCount;
 
 extern volatile uint32_t puzzle_seconds_counter;
 extern volatile uint32_t ms;
+
+static uint32_t cooldownTimer;
+static bool cooldownTimerTriggered;
 
 static RouteId_t activeRouteId = ROUTE_START_TO_EXPERIENCE;
 static volatile uint32_t timeout_ms = 0;
@@ -64,18 +68,35 @@ void navigation_main(StateMachine_t *sm)
      */
     if (targetReached == true && hm10_isBusy == false)
     {
-        if (keypadFlag)
+        while(lpuart2_rxcnt()){
+            lpuart2_getchar();
+        }
+
+        if(cooldownTimerTriggered == false){
+            cooldownTimer = ms;
+            cooldownTimerTriggered = true;
+        }
+
+        if (keypadFlag && ((ms - cooldownTimer) > 5000))
         {
+            cooldownTimerTriggered = false;
             keypadFlag = false;
 
             if (pressedKey == ENTER)
             {
                 printf("Room arrival confirmed by player\r\n");
 
-                if(activeRouteId+1 <= ROUTE_END){
+                if(activeRouteId != (ROUTE_END-1)){
                     Logger_Record_Time(activeRouteId, puzzle_seconds_counter);
-                    addToQueue(sm, routeProfiles[activeRouteId+1].puzzleState);
-                    activeRouteId = (activeRouteId+1) % (ROUTE_END-1);
+                    addToQueue(sm, routeProfiles[activeRouteId].puzzleState);
+                    activeRouteId++;
+
+                    // reset the beacon rssis
+                    for(int x = 0; x < beaconDefCount; x++){
+                        for(int y = 0; y < beaconDefinitions[x].rssiSize; y++){
+                            beaconDefinitions[x].rssi[y] = -86;
+                        }
+                    }
                 }
                 else {
                     addToQueue(sm, &STATE_BOOT_MENU);
@@ -101,9 +122,13 @@ void navigation_main(StateMachine_t *sm)
         hm10_read_beacons();
     }
 
-    if(ms - timeout_ms == 8000){
+    if(ms - timeout_ms >= 6000){
         hm10_isBusy = false;
     }
+
+    // return when target is reached so we don't do excess code
+    if(targetReached)
+        return;
 
     // apply the beacon rules
     if(ms - checkbeacon_timeout > 1000){
