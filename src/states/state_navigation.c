@@ -62,7 +62,7 @@ void navigation_main(StateMachine_t *sm)
       Target beacon was already found.
       Now wait for the player to confirm that they reached the room.
      */
-    if (targetReached == true)
+    if (targetReached == true && hm10_isBusy == false)
     {
         if (keypadFlag)
         {
@@ -88,17 +88,19 @@ void navigation_main(StateMachine_t *sm)
 
         return;
     }
-
-    if(hm10_isBusy == false){
+    
+    if(hm10_isBusy == false && targetReached == false){
         hm10_send_command("AT+DISI?\r\n");
         printf("AT+DISI?\r\n");
         hm10_isBusy = true;
         timeout_ms = ms;
-    } else {
+    }
+
+    if(hm10_isBusy == true){
         hm10_read_beacons();
     }
 
-    if(ms - timeout_ms == 5000){
+    if(ms - timeout_ms == 8000){
         hm10_isBusy = false;
     }
 
