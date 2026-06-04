@@ -45,7 +45,7 @@ void hm10_read_beacons() {
     while (lpuart2_rxcnt() > 0) { 
         uint8_t data = lpuart2_getchar();
         buffer[string_index] = (char)data;
-        printf("%c", data);
+        // printf("%c", data);
         string_index++;
         if (data == '\n' || data == '\r') {
             // parse the data, reset buffer

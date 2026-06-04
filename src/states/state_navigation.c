@@ -122,7 +122,7 @@ void navigation_main(StateMachine_t *sm)
                 averageRssi += recentBeacons[x]->rssi[r];
             }
             averageRssi = averageRssi/recentBeacons[x]->rssiSize;
-            // printf("average rssi: %d on beacon: %s\r\n", averageRssi, recentBeacons[x]->minor);
+            printf("average rssi: %d on beacon: %s\r\n", averageRssi, recentBeacons[x]->minor);
 
             // printf("rule beaconid: %d", rule->beaconId);
             if (averageRssi > rule->rssiThreshold) {

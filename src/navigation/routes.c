@@ -1,6 +1,5 @@
 #include "routes.h"
 #include <string.h>
-#include <stdio.h>
 
 extern State_t STATE_MENU;
 extern State_t STATE_EXPERIENCE_MISSION;
@@ -10,11 +9,6 @@ extern State_t STATE_BUILD_TEST;
 extern State_t STATE_FINISH;
 
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
-
-static char set_majors[10][6] = {"", "", "", "", "", "", "", "", "", ""};
-static char set_minors[10][6] = {"", "", "", "", "", "", "", "", "", ""};
-static char set_labels[10][6] = {"B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10"};
-
 
 /*
  * Beacon registry
@@ -35,18 +29,17 @@ static char set_labels[10][6] = {"B01", "B02", "B03", "B04", "B05", "B06", "B07"
  * B09 = minor 0009
  * B10 = minor 000A
  */
-
 BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B02, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B03, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B04, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B05, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B06, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B07, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B08, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B09, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
-    {BEACON_B10, set_majors[0], set_minors[0], set_labels[0], {-99, -99, -99}, 3, 0},
+    {BEACON_B01, "0AEA", "0032", "B01", {-99, -99, -99}, 3, 0},
+    {BEACON_B02, "0AEA", "0026", "B02", {-99, -99, -99}, 3, 0},
+    {BEACON_B03, "0AEA", "0037", "B03", {-99, -99, -99}, 3, 0},
+    {BEACON_B04, "0B01", "0004", "B04", {-99, -99, -99}, 3, 0},
+    {BEACON_B05, "0B01", "0005", "B05", {-99, -99, -99}, 3, 0},
+    {BEACON_B06, "0B01", "0006", "B06", {-99, -99, -99}, 3, 0},
+    {BEACON_B07, "0B01", "0007", "B07", {-99, -99, -99}, 3, 0},
+    {BEACON_B08, "0B01", "0008", "B08", {-99, -99, -99}, 3, 0},
+    {BEACON_B09, "0B01", "0009", "B09", {-99, -99, -99}, 3, 0},
+    {BEACON_B10, "0B01", "000A", "B10", {-99, -99, -99}, 3, 0}
 };
 
 const char beaconDefCount = 10;
@@ -213,28 +206,4 @@ const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, const c
     }
 
     return 0;
-}
-
-
-void routes_update_beacon(const char* label, const char* major, const char* minor)
-{
-    for (int i = 0; i < 10; i++)
-    {
-        if (strcmp(set_labels[i], label) == 0) 
-        {
-            strcpy(set_majors[i], major);
-            strcpy(set_minors[i], minor);
-            break; 
-        }
-    }
-}
-//checking if the beacon addresses are pushed to the box
-void routes_dump_config(void)
-{
-    printf("check address\r\n");
-    for (int i = 0; i < 10; i++)
-    {
-        printf("Slot %d - %s | Maj: %s | Min: %s\r\n", 
-               i, set_labels[i], set_majors[i], set_minors[i]);
-    }
 }

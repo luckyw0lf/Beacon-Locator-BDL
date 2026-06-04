@@ -137,43 +137,6 @@ int main(void){
             }
         }
         updateStateMachine(&systemSM);
-        
-        // reading the data received from GUI
-        if (serial_rxcnt() > 0)
-        {
-            char c = (char)serial_getchar();
-
-            pc_rx_buffer[pc_rx_index++] = c;
-
-            if (c == '\n' || c == '\r' || pc_rx_index >= 49)
-            {
-                pc_rx_buffer[pc_rx_index] = '\0';
-                //receiving request to push data in SD card
-                if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
-                {
-                    Logger_Respond_To_PC();
-                }
-                //getting request to receive beacon addresses
-                else if (strstr(pc_rx_buffer, "<CFG|") != NULL)
-                {
-                    char label[10] = {0};
-                    char major[10] = {0};
-                    char minor[10] = {0};
-
-                    if (sscanf(pc_rx_buffer, "<CFG|%9[^|]|%9[^|]|%9[^>]>", label, major, minor) == 3)
-                    {
-                        routes_update_beacon(label, major, minor);                        
-                    }
-                }
-                else if (strstr(pc_rx_buffer, "check") != NULL) 
-                {
-                    routes_dump_config();
-                }
-
-                memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
-                pc_rx_index = 0;
-            }
-        }
     }
 }
 // -----------------------------------------------------------------------------
