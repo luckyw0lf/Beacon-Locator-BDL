@@ -5,6 +5,7 @@
 #include "lock.h"
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
 extern State_t STATE_FINISH;
@@ -12,7 +13,15 @@ extern State_t STATE_FINISH;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+typedef enum
+{
+    BUILD_PAGE_INTRO_1,
+    BUILD_PAGE_BUILD_HELP,
+    BUILD_PAGE_CONGRATS,
+    BUILD_PAGE_FINAL_QUESTION
+} BuildPage_t;
 
+static BuildPage_t currentPage = BUILD_PAGE_INTRO_1;
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -23,31 +32,74 @@ static void clear_answer(void)
     answerLength = 0;
 }
 
+static void show_intro_page_1(void)
+{
+    oled_clear();
+
+    oled_set_cursor(0, 0);
+    oled_puts("Now its time");
+
+    oled_set_cursor(0, 2);
+    oled_puts("to build valve");
+
+    oled_set_cursor(0, 4);
+    oled_puts("You did good");
+
+    oled_set_cursor(0, 6);
+    oled_puts("ENTER");
+}
+
+static void show_build_help_page(void)
+{
+    oled_clear();
+
+    oled_set_cursor(0, 0);
+    oled_puts("Get help to");
+
+    oled_set_cursor(0, 2);
+    oled_puts("build valve");
+
+    oled_set_cursor(0, 4);
+    oled_puts("Then test it!");
+
+    oled_set_cursor(0, 6);
+    oled_puts("Press 1 done");
+}
+
+static void show_congrats_page(void)
+{
+    oled_clear();
+
+    oled_set_cursor(0, 0);
+    oled_puts("Congrats!");
+
+    oled_set_cursor(0, 2);
+    oled_puts("You built a");
+
+    oled_set_cursor(0, 3);
+    oled_puts("working valve");
+
+    oled_set_cursor(0, 5);
+    oled_puts("Like engineer!");
+
+    oled_set_cursor(0, 7);
+    oled_puts("ENTER");
+}
+
 static void show_final_question(void)
 {
     oled_clear();
 
     oled_set_cursor(0, 0);
-    oled_puts("FINAL CODE");
+    oled_puts("Final question:");
 
     oled_set_cursor(0, 2);
-    oled_puts("How many parts?");
+    oled_puts("How many parts");
 
-    oled_set_cursor(0, 5);
-    oled_puts("Code: _");
-}
+    oled_set_cursor(0, 3);
+    oled_puts("used in valve?");
 
-static void show_answer_input(void)
-{
-    oled_clear();
-
-    oled_set_cursor(0, 0);
-    oled_puts("FINAL CODE");
-
-    oled_set_cursor(0, 2);
-    oled_puts("How many parts?");
-
-    oled_set_cursor(0, 5);
+    oled_set_cursor(0, 6);
     oled_puts("Code: ");
     oled_puts(answerBuffer);
     oled_puts("_");
@@ -121,8 +173,10 @@ void build_test_entry(StateMachine_t *sm)
 {
     printf("ENTER BUILD_TEST\r\n");
 
+    currentPage = BUILD_PAGE_INTRO_1;
     clear_answer();
-    show_final_question();
+
+    show_intro_page_1();
 
     sm->isBusy = true;
 }
@@ -133,41 +187,87 @@ void build_test_main(StateMachine_t *sm)
     {
         keypadFlag = false;
 
-        if (pressedKey == ENTER)
+        if (currentPage == BUILD_PAGE_INTRO_1)
         {
-            if (strcmp(answerBuffer, "9") == 0)
+            if (pressedKey == ENTER)
             {
-                printf("Final code correct\r\n");
-
-                show_correct_answer();
-                lock_open();
-
-                addToQueue(sm, &STATE_FINISH);
-                sm->isBusy = false;
-            }
-            else
-            {
-                printf("Wrong final code: %s\r\n", answerBuffer);
-
-                clear_answer();
-                show_wrong_answer();
+                currentPage = BUILD_PAGE_BUILD_HELP;
+                show_build_help_page();
             }
 
             return;
         }
 
-        char digit = key_to_digit(pressedKey);
-
-        if (digit != '\0')
+        if (currentPage == BUILD_PAGE_BUILD_HELP)
         {
-            if (answerLength < sizeof(answerBuffer) - 1)
+            if (pressedKey == ONE)
             {
-                answerBuffer[answerLength] = digit;
-                answerLength++;
-                answerBuffer[answerLength] = '\0';
+                currentPage = BUILD_PAGE_CONGRATS;
+                show_congrats_page();
             }
 
-            show_answer_input();
+            return;
+        }
+
+        if (currentPage == BUILD_PAGE_CONGRATS)
+        {
+            if (pressedKey == ENTER)
+            {
+                currentPage = BUILD_PAGE_FINAL_QUESTION;
+                clear_answer();
+                show_final_question();
+            }
+
+            return;
+        }
+
+        if (currentPage == BUILD_PAGE_FINAL_QUESTION)
+        {
+            if (pressedKey == LEFT)
+            {
+                clear_answer();
+                show_final_question();
+                return;
+            }
+
+            if (pressedKey == ENTER)
+            {
+                if (strcmp(answerBuffer, "9") == 0)
+                {
+                    printf("Final code correct\r\n");
+
+                    show_correct_answer();
+                    lock_open();
+
+                    addToQueue(sm, &STATE_FINISH);
+                    sm->isBusy = false;
+                }
+                else
+                {
+                    printf("Wrong final code: %s\r\n", answerBuffer);
+
+                    clear_answer();
+                    show_wrong_answer();
+                }
+
+                return;
+            }
+
+            char digit = key_to_digit(pressedKey);
+
+            if (digit != '\0')
+            {
+                if (answerLength < sizeof(answerBuffer) - 1)
+                {
+                    answerBuffer[answerLength] = digit;
+                    answerLength++;
+                    answerBuffer[answerLength] = '\0';
+                }
+
+                show_final_question();
+            }
+
+            return;
         }
     }
 }

@@ -170,6 +170,7 @@ void experience_main(StateMachine_t *sm)
         {
             if (pressedKey == ENTER)
             {
+                printf("PRESSED ENTER.");
                 currentPage = EXPERIENCE_PAGE_INTRO_2;
                 show_intro_page_2();
             }
@@ -181,6 +182,7 @@ void experience_main(StateMachine_t *sm)
         {
             if (pressedKey == ENTER)
             {
+                printf("PRESSED ENTER.");
                 currentPage = EXPERIENCE_PAGE_QUESTION;
                 selectedAnswer = 0;
                 show_question_page();
