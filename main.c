@@ -33,6 +33,12 @@ void emptyFunc(StateMachine_t *sm);
 // -----------------------------------------------------------------------------
 // Local variables
 // -----------------------------------------------------------------------------
+char pc_rx_buffer[50];
+int pc_rx_index = 0;
+
+extern volatile uint32_t puzzle_seconds_counter;
+extern volatile uint32_t systick_counter;
+
 volatile uint32_t ms = 0;
 static volatile uint32_t previous_ms = 0;
 static StateMachine_t systemSM;
@@ -102,7 +108,14 @@ static unsigned char touch_ms_delay = 20;
 // -----------------------------------------------------------------------------
 // Main application
 int main(void){   
-    initStateMachine(&systemSM, &STATE_INIT);
+    initStateMachine(&systemSM, &STATE_INIT);    
+    serial_init(115200);
+    Logger_Init();
+
+    // setup the Timer
+    SysTick_Config(SystemCoreClock / 1000U);
+    Logger_Respond_To_PC();
+    
     while(1)
     {
         if(handle_touch_interrupt){
@@ -112,6 +125,43 @@ int main(void){
             }
         }
         updateStateMachine(&systemSM);
+        
+        // reading the data received from GUI
+        if (serial_rxcnt() > 0)
+        {
+            char c = (char)serial_getchar();
+
+            pc_rx_buffer[pc_rx_index++] = c;
+
+            if (c == '\n' || c == '\r' || pc_rx_index >= 49)
+            {
+                pc_rx_buffer[pc_rx_index] = '\0';
+                //receiving request to push data in SD card
+                if (strstr(pc_rx_buffer, "---REQUEST_LOG_DATA---") != NULL)
+                {
+                    Logger_Respond_To_PC();
+                }
+                //getting request to receive beacon addresses
+                else if (strstr(pc_rx_buffer, "<CFG|") != NULL)
+                {
+                    char label[10] = {0};
+                    char major[10] = {0};
+                    char minor[10] = {0};
+
+                    if (sscanf(pc_rx_buffer, "<CFG|%9[^|]|%9[^|]|%9[^>]>", label, major, minor) == 3)
+                    {
+                        routes_update_beacon(label, major, minor);                        
+                    }
+                }
+                else if (strstr(pc_rx_buffer, "check") != NULL) 
+                {
+                    routes_dump_config();
+                }
+
+                memset(pc_rx_buffer, 0, sizeof(pc_rx_buffer));
+                pc_rx_index = 0;
+            }
+        }
     }
 }
 // -----------------------------------------------------------------------------
@@ -120,6 +170,13 @@ int main(void){
 void SysTick_Handler(void)
 {
     ms++;
+
+    systick_counter++;
+    if (systick_counter == 1000)
+    {
+        systick_counter = 0;
+        puzzle_seconds_counter++;
+    }
 }
 
 void emptyFunc(StateMachine_t *sm){}
