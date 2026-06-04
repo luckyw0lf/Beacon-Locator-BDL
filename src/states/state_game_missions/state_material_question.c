@@ -13,6 +13,8 @@ extern State_t STATE_MATERIAL_COLLECTION;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+extern volatile uint32_t puzzle_seconds_counter;
+
 void material_question_entry(StateMachine_t *sm)
 {
     printf("ENTER MATERIAL_QUESTION\r\n");
@@ -38,6 +40,7 @@ void material_question_main(StateMachine_t *sm)
 
         if (pressedKey == ENTER)
         {
+            Logger_Record_Time(ROOM_QUESTION, puzzle_seconds_counter);
             navigation_set_route(ROUTE_MATERIAL_QUESTION_TO_COLLECTION);
             navigation_set_next_state(&STATE_MATERIAL_COLLECTION);
 
