@@ -43,9 +43,9 @@ typedef struct
     const char *major;
     const char *minor;
     const char *label;
-    char rssi[5];
-    char rssiSize;
-    char index;
+    int rssi[3];
+    int rssiSize;
+    int index;
 } BeaconDefinition_t;
 
 typedef struct
@@ -54,9 +54,9 @@ typedef struct
     BeaconRole_t role;
     int rssiThreshold;
 
-    const char *line1;
-    const char *line2;
-    const char *line3;
+    char *line1;
+    char *line2;
+    char *line3;
 } RouteBeaconRule_t;
 
 typedef struct
@@ -75,9 +75,8 @@ typedef struct
 } RouteProfile_t;
 
 const BeaconDefinition_t *routes_get_beacon_definition(BeaconId_t beaconId);
-const BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor);
+BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor);
 
 const RouteProfile_t *routes_get_profile(RouteId_t routeId);
-const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, BeaconId_t beaconId);
-
+const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, char const *major, const char *minor);
 #endif

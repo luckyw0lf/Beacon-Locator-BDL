@@ -102,7 +102,7 @@ static unsigned char touch_ms_delay = 20;
 // -----------------------------------------------------------------------------
 // Main application
 int main(void){   
-    initStateMachine(&systemSM, &STATE_INIT);
+initStateMachine(&systemSM, &STATE_INIT);
     while(1)
     {
         if(handle_touch_interrupt){

@@ -29,17 +29,17 @@ extern State_t STATE_FINISH;
  * B09 = minor 0009
  * B10 = minor 000A
  */
-const BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0B01", "0001", "B01", {}, 5, 0},
-    {BEACON_B02, "0B01", "0002", "B02", {}, 5, 0},
-    {BEACON_B03, "0B01", "0003", "B03", {}, 5, 0},
-    {BEACON_B04, "0B01", "0004", "B04", {}, 5, 0},
-    {BEACON_B05, "0B01", "0005", "B05", {}, 5, 0},
-    {BEACON_B06, "0B01", "0006", "B06", {}, 5, 0},
-    {BEACON_B07, "0B01", "0007", "B07", {}, 5, 0},
-    {BEACON_B08, "0B01", "0008", "B08", {}, 5, 0},
-    {BEACON_B09, "0B01", "0009", "B09", {}, 5, 0},
-    {BEACON_B10, "0B01", "000A", "B10", {}, 5, 0}
+BeaconDefinition_t beaconDefinitions[] = {
+    {BEACON_B01, "0AEA", "0032", "B01", {-99, -99, -99}, 3, 0},
+    {BEACON_B02, "0AEA", "0026", "B02", {-99, -99, -99}, 3, 0},
+    {BEACON_B03, "0AEA", "0037", "B03", {-99, -99, -99}, 3, 0},
+    {BEACON_B04, "0B01", "0004", "B04", {-99, -99, -99}, 3, 0},
+    {BEACON_B05, "0B01", "0005", "B05", {-99, -99, -99}, 3, 0},
+    {BEACON_B06, "0B01", "0006", "B06", {-99, -99, -99}, 3, 0},
+    {BEACON_B07, "0B01", "0007", "B07", {-99, -99, -99}, 3, 0},
+    {BEACON_B08, "0B01", "0008", "B08", {-99, -99, -99}, 3, 0},
+    {BEACON_B09, "0B01", "0009", "B09", {-99, -99, -99}, 3, 0},
+    {BEACON_B10, "0B01", "000A", "B10", {-99, -99, -99}, 3, 0}
 };
 
 const char beaconDefCount = 10;
@@ -53,11 +53,9 @@ const char beaconDefCount = 10;
  * 0006 = target room
  */
 const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
-    {BEACON_B04, BEACON_ROLE_PASS_BY,  -65, "Turn left", "From corridor", ""},
-    {BEACON_B05, BEACON_ROLE_APPROACH, -70, "You are close", "Keep going", ""},
-    {BEACON_B06, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
+    {BEACON_B01, BEACON_ROLE_PASS_BY,  -75, "Good direction", "Keep going", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Part desk", "Keep going", ""},
+    {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
 };
 
 /*
@@ -160,7 +158,7 @@ const BeaconDefinition_t *routes_get_beacon_definition(BeaconId_t beaconId)
     return 0;
 }
 
-const BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor)
+BeaconDefinition_t *routes_find_beacon_by_major_minor(const char *major, const char *minor)
 {
     if (major == 0 || minor == 0)
     {
@@ -192,17 +190,17 @@ const RouteProfile_t *routes_get_profile(RouteId_t routeId)
     return 0;
 }
 
-const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, BeaconId_t beaconId)
+const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, const char *major, const char *minor)
 {
     if (profile == 0)
     {
         return 0;
     }
 
+    BeaconDefinition_t *beacon = routes_find_beacon_by_major_minor(major, minor);
     for (uint8_t i = 0; i < profile->ruleCount; i++)
     {
-        if (profile->rules[i].beaconId == beaconId)
-        {
+        if(profile->rules[i].beaconId == beacon->id){
             return &profile->rules[i];
         }
     }
