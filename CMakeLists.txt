@@ -84,8 +84,6 @@ mcux_add_include(
              lib/oled
              lib/mpr121
              lib/serial2lpuart
-             lib/sll
-             lib/system_timer
              
              src
              src/game_logger
