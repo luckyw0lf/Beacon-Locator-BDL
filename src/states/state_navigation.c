@@ -35,6 +35,8 @@ static RouteId_t activeRouteId = ROUTE_START_TO_EXPERIENCE;
 static volatile uint32_t timeout_ms = 0;
 static uint32_t checkbeacon_timeout = 0;
 
+static int routeProgressIndex = 0;
+static const RouteBeaconRule_t *lastShownRule = 0;
 
 static bool targetReached = false;
 
@@ -53,8 +55,30 @@ static void show_game_message(char *line1, char *line2, char *line3)
     oled_puts(line3);
 }
 
+static void show_rule_message_once(const RouteBeaconRule_t *rule)
+{
+    if (rule == lastShownRule)
+    {
+        return;
+    }
+
+    lastShownRule = rule;
+    show_game_message(rule->line1, rule->line2, rule->line3);
+}
+
 void navigation_entry(StateMachine_t *sm){
     checkbeacon_timeout = ms;
+    routeProgressIndex = 0;
+    lastShownRule = 0;
+
+    keypadFlag = false;
+    cooldownTimerTriggered = false;
+
+    show_game_message(
+        (char *)routeProfiles[activeRouteId].targetLine1,
+        (char *)routeProfiles[activeRouteId].targetLine2,
+        (char *)routeProfiles[activeRouteId].targetLine3
+    );
 }
 
 void navigation_main(StateMachine_t *sm)
@@ -66,6 +90,23 @@ void navigation_main(StateMachine_t *sm)
       Target beacon was already found.
       Now wait for the player to confirm that they reached the room.
      */
+    if (keypadFlag)
+{
+    keypadFlag = false;
+
+    if (pressedKey == ENTER)
+    {
+        printf("TEST: Skipping navigation, going to route mission\r\n");
+
+        addToQueue(sm, routeProfiles[activeRouteId].puzzleState);
+
+        targetReached = false;
+        cooldownTimerTriggered = false;
+        sm->isBusy = false;
+
+        return;
+    }
+}
     if (targetReached == true && hm10_isBusy == false)
     {
         while(lpuart2_rxcnt()){
@@ -86,7 +127,7 @@ void navigation_main(StateMachine_t *sm)
             {
                 printf("Room arrival confirmed by player\r\n");
 
-                if(activeRouteId != (ROUTE_END-1)){
+                if(activeRouteId < (ROUTE_END)){
                     Logger_Record_Time(activeRouteId, puzzle_seconds_counter);
                     addToQueue(sm, routeProfiles[activeRouteId].puzzleState);
                     activeRouteId++;
@@ -135,6 +176,11 @@ void navigation_main(StateMachine_t *sm)
         checkbeacon_timeout = ms;
         for(int x = 0; x < 3; x++){
 
+            if (recentBeacons[x] == 0)
+            {
+            continue;
+            }
+
             if(strcmp(recentBeacons[x]->minor, "H") == 0){
                 continue;
             }
@@ -144,20 +190,36 @@ void navigation_main(StateMachine_t *sm)
                 recentBeacons[x]->minor
             );
 
+            if (rule == 0)
+            {
+             continue;
+            }              
+            
+            int ruleIndex = rule - routeProfiles[activeRouteId].rules;
+
+           if (ruleIndex < routeProgressIndex)
+             {
+              continue;
+             }
             //calc avarage rssi
             int averageRssi = 0;
             for (int r = 0; r < recentBeacons[x]->rssiSize; r++) {
                 averageRssi += recentBeacons[x]->rssi[r];
             }
             averageRssi = averageRssi/recentBeacons[x]->rssiSize;
-            printf("average rssi: %d on beacon: %s\r\n", averageRssi, recentBeacons[x]->minor);
+            //printf("average rssi: %d on beacon: %s\r\n", averageRssi, recentBeacons[x]->minor);
 
             // printf("rule beaconid: %d", rule->beaconId);
             if (averageRssi > rule->rssiThreshold) {
-                show_game_message(rule->line1, rule->line2, rule->line3);
+                routeProgressIndex = ruleIndex;
 
-                if(rule->role == BEACON_ROLE_TARGET)
-                    targetReached = true;
+                show_rule_message_once(rule);
+                if (rule->role == BEACON_ROLE_TARGET)
+{
+                targetReached = true;
+                keypadFlag = false;
+                cooldownTimerTriggered = false;
+}
                 break;
             }
         }

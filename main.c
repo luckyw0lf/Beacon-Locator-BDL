@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <MCXA153.h>
-#include <string.h>
 
 #include "leds.h"
 #include "serial.h"
@@ -17,8 +16,6 @@
 #include "state_navigation.h"
 #include "state_game_missions.h"
 #include "state_game_intro.h"
-#include "game_logger.h"
-#include "beacon_parser.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -36,12 +33,6 @@ void emptyFunc(StateMachine_t *sm);
 // -----------------------------------------------------------------------------
 // Local variables
 // -----------------------------------------------------------------------------
-char pc_rx_buffer[50];
-int pc_rx_index = 0;
-
-extern volatile uint32_t puzzle_seconds_counter;
-extern volatile uint32_t systick_counter;
-
 volatile uint32_t ms = 0;
 static volatile uint32_t previous_ms = 0;
 static StateMachine_t systemSM;
@@ -111,23 +102,7 @@ static unsigned char touch_ms_delay = 20;
 // -----------------------------------------------------------------------------
 // Main application
 int main(void){   
-    initStateMachine(&systemSM, &STATE_INIT);    
-    serial_init(115200);
-    Logger_Init();
-
-    // setup the Timer
-    SysTick_Config(SystemCoreClock / 1000U);
-    Logger_Respond_To_PC();
-
-    if (Logger_Save_Data() == true)
-    {
-        printf("SUCCESS: Log saved to SD Card!\r\n");
-    }
-    else
-    {
-        printf(">> Fail!\r\n");
-    }
-    
+    initStateMachine(&systemSM, &STATE_INIT);
     while(1)
     {
         if(handle_touch_interrupt){
@@ -145,13 +120,6 @@ int main(void){
 void SysTick_Handler(void)
 {
     ms++;
-
-    systick_counter++;
-    if (systick_counter == 1000)
-    {
-        systick_counter = 0;
-        puzzle_seconds_counter++;
-    }
 }
 
 void emptyFunc(StateMachine_t *sm){}

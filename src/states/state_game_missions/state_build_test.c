@@ -4,6 +4,7 @@
 #include "oled.h"
 #include "lock.h"
 #include "game_logger.h"
+#include "routes.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -14,6 +15,8 @@ extern State_t STATE_FINISH;
 extern char keypadFlag;
 extern uint16_t pressedKey;
 
+extern volatile uint32_t puzzle_seconds_counter;
+
 typedef enum
 {
     BUILD_PAGE_INTRO_1,
@@ -23,7 +26,6 @@ typedef enum
 } BuildPage_t;
 
 static BuildPage_t currentPage = BUILD_PAGE_INTRO_1;
-extern volatile uint32_t puzzle_seconds_counter;
 
 static char answerBuffer[4];
 static uint8_t answerLength = 0;
@@ -42,9 +44,10 @@ static void show_intro_page_1(void)
     oled_puts("Nu gaan we");
 
     oled_set_cursor(0, 2);
-    oled_puts("het ventiel bouwen");
+    oled_puts("het ventiel");
 
-  
+    oled_set_cursor(0, 3);
+    oled_puts("bouwen");
 
     oled_set_cursor(0, 6);
     oled_puts("ENTER");
@@ -75,13 +78,10 @@ static void show_congrats_page(void)
     oled_puts("Gefeliciteerd!");
 
     oled_set_cursor(0, 2);
-    oled_puts("Je hebt een  ");
+    oled_puts("Ventiel werkt");
 
-    oled_set_cursor(0, 3);
-    oled_puts("ventiel gebouwd");
-
-    oled_set_cursor(0, 5);
-    oled_puts("als een engineer!");
+    oled_set_cursor(0, 4);
+    oled_puts("Als engineer!");
 
     oled_set_cursor(0, 7);
     oled_puts("ENTER");
@@ -177,6 +177,8 @@ void build_test_entry(StateMachine_t *sm)
     currentPage = BUILD_PAGE_INTRO_1;
     clear_answer();
 
+    keypadFlag = false;
+
     show_intro_page_1();
 
     sm->isBusy = true;
@@ -194,22 +196,6 @@ void build_test_main(StateMachine_t *sm)
             {
                 currentPage = BUILD_PAGE_BUILD_HELP;
                 show_build_help_page();
-                printf("Final code correct\r\n");
-                //save finish time into SD card
-                Logger_Record_Time(ROUTE_COLLECTION_TO_BUILD_TEST, puzzle_seconds_counter);           
-
-                show_correct_answer();
-                lock_open();
-
-                addToQueue(sm, &STATE_FINISH);
-                sm->isBusy = false;
-            }
-            else
-            {
-                printf("Wrong final code: %s\r\n", answerBuffer);
-
-                clear_answer();
-                show_wrong_answer();
             }
 
             return;
@@ -252,6 +238,8 @@ void build_test_main(StateMachine_t *sm)
                 if (strcmp(answerBuffer, "9") == 0)
                 {
                     printf("Final code correct\r\n");
+
+                    Logger_Record_Time(ROUTE_COLLECTION_TO_BUILD_TEST, puzzle_seconds_counter);
 
                     show_correct_answer();
                     lock_open();

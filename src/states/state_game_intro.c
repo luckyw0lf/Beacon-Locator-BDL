@@ -22,38 +22,38 @@ static void show_intro_page(void)
     if (introPage == 0)
     {
         oled_set_cursor(0, 0);
-        oled_puts("Welcome");
+        oled_puts("Welkom");
         oled_set_cursor(0, 2);
-        oled_puts("adventurers!");
+        oled_puts("avonturiers!");
         oled_set_cursor(0, 5);
-        oled_puts("Press ENTER");
+        oled_puts("Druk ENTER");
     }
     else if (introPage == 1)
     {
         oled_set_cursor(0, 0);
-        oled_puts("Solve puzzles");
+        oled_puts("Los puzzels op");
         oled_set_cursor(0, 2);
         oled_puts("and learn");
         oled_set_cursor(0, 5);
-        oled_puts("Press ENTER");
+        oled_puts("Druk ENTER");
     }
     else if (introPage == 2)
     {
         oled_set_cursor(0, 0);
-        oled_puts("Follow clues");
+        oled_puts("Volg hints");
         oled_set_cursor(0, 2);
-        oled_puts("Find rooms");
+        oled_puts("Vind kamers");
         oled_set_cursor(0, 5);
-        oled_puts("Press ENTER");
+        oled_puts("Druk ENTER");
     }
     else
     {
         oled_set_cursor(0, 0);
-        oled_puts("Good luck!");
+        oled_puts("Succes!");
         oled_set_cursor(0, 2);
-        oled_puts("Press 1 start");
+        oled_puts("Druk 1 start");
         oled_set_cursor(0, 5);
-        oled_puts("ENTER = repeat");
+        oled_puts("ENTER = opnieuw");
     }
 }
 

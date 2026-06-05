@@ -30,9 +30,9 @@ extern State_t STATE_FINISH;
  * B10 = minor 000A
  */
 BeaconDefinition_t beaconDefinitions[] = {
-    {BEACON_B01, "0AEA", "0032", "B01", {-86, -86, -86}, 3, 0},
-    {BEACON_B02, "0AEA", "0026", "B02", {-86, -86, -86}, 3, 0},
-    {BEACON_B03, "0AEA", "0037", "B03", {-86, -86, -86}, 3, 0},
+    {BEACON_B01, "0B01", "0001", "B01", {-86, -86, -86}, 3, 0},
+    {BEACON_B02, "0B01", "0002", "B02", {-86, -86, -86}, 3, 0},
+    {BEACON_B03, "0B01", "0003", "B03", {-86, -86, -86}, 3, 0},
     {BEACON_B04, "0B01", "0004", "B04", {-86, -86, -86}, 3, 0},
     {BEACON_B05, "0B01", "0005", "B05", {-86, -86, -86}, 3, 0},
     {BEACON_B06, "0B01", "0006", "B06", {-86, -86, -86}, 3, 0},
@@ -53,9 +53,12 @@ const char beaconDefCount = 10;
  * 0006 = target room
  */
 const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY,   -85, "Good direction", "Keep going", "Right from corridor"},
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -80, "Part desk", "Target on right", ""},
-    {BEACON_B03, BEACON_ROLE_TARGET,   -65, "Experience room", "Reached", "Press ENTER"}
+    {BEACON_B01, BEACON_ROLE_PASS_BY,  -75, "Signal gevonden", "Ga door", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Ga door", ""},
+    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Ga door", ""},
+    {BEACON_B04, BEACON_ROLE_PASS_BY,  -70, "Sla linksaf", "Vanaf de gang", ""},
+    {BEACON_B05, BEACON_ROLE_APPROACH, -70, "Je bent dichtbij", "Ga door", ""},
+    {BEACON_B06, BEACON_ROLE_TARGET,   -65, "Ervaringskamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -66,9 +69,9 @@ const RouteBeaconRule_t startToExperienceRules[] = {
  * 0003 is the target room.
  */
 const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
-    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Go forward", "Find desk", ""},
-    {BEACON_B02, BEACON_ROLE_APPROACH, -75, "You are close", "N**ga", ""},
-    {BEACON_B01, BEACON_ROLE_TARGET,   -75, "Question room", "Reached", "Press ENTER"}
+    {BEACON_B05, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Volg de gang", ""},
+    {BEACON_B04, BEACON_ROLE_APPROACH, -75, "Je bent dichtbij", "Zoek de kamer", "aan je rechterkant"},
+    {BEACON_B03, BEACON_ROLE_TARGET,   -75, "Vraag kamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -81,11 +84,11 @@ const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
  * 000A is the target room.
  */
 const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY, -85, "Go back ", "Keep going", ""},
-    {BEACON_B02, BEACON_ROLE_PASS_BY, -75, "Good direction", "Keep going", ""},
-    //{BEACON_B08, BEACON_ROLE_PASS_BY, -65, "Turn left", "From corridor", ""},
-    //{BEACON_B09, BEACON_ROLE_PASS_BY, -65, "Right track", "Keep going", ""},
-    {BEACON_B03, BEACON_ROLE_TARGET,  -75, "Material room", "Reached", "Press ENTER"}
+    {BEACON_B04, BEACON_ROLE_PASS_BY, -75, "Goede richting", "Ga door", ""},
+    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Ga door", "Volg de route", ""},
+    {BEACON_B08, BEACON_ROLE_PASS_BY, -70, "Sla linksaf", "Vanaf de gang", ""},
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -70, "Goed bezig", "Ga door", ""},
+    {BEACON_B10, BEACON_ROLE_TARGET,  -70, "Materiaal kamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -97,18 +100,18 @@ const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
  * 0008 is  the final target.
  */
 const RouteBeaconRule_t collectionToBuildTestRules[] = {
-    {BEACON_B03, BEACON_ROLE_PASS_BY, -75, "skkkkkrt", "Keep going", ""},
-    {BEACON_B02, BEACON_ROLE_PASS_BY, -75, "Turn left papa", "Room is nearby", ""},
-    {BEACON_B01, BEACON_ROLE_TARGET,  -75, "Final room", "Reached", "Press ENTER"}
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -75, "Goed bezig", "Zoek verder", ""},
+    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Je bent dichtbij", "Zoek de kamer", ""},
+    {BEACON_B08, BEACON_ROLE_TARGET,  -70, "Test kamer", "Bereikt", "Druk ENTER"}
 };
 
 const RouteProfile_t routeProfiles[] = {
     {
         ROUTE_START_TO_EXPERIENCE,
-        "Start to Experience Room",
-        "Target:",
-        "Experience room",
-        "Follow the route",
+        "Start naar Ervaringskamer",
+        "Doel:",
+        "Ervaringskamer",
+        "Volg de route",
         startToExperienceRules,
         ARRAY_COUNT(startToExperienceRules),
         &STATE_EXPERIENCE_MISSION
@@ -198,6 +201,12 @@ const RouteBeaconRule_t *routes_find_rule(const RouteProfile_t *profile, const c
     }
 
     BeaconDefinition_t *beacon = routes_find_beacon_by_major_minor(major, minor);
+
+     if (beacon == 0)
+    {
+        return 0;
+    }
+
     for (uint8_t i = 0; i < profile->ruleCount; i++)
     {
         if(profile->rules[i].beaconId == beacon->id){
