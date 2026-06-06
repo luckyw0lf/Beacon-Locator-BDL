@@ -120,15 +120,15 @@ static void show_question_page(void)
 
     if (selectedAnswer == 0)
     {
-        oled_puts(">1 60.42 2 30.42");
+        oled_puts(">1 60.83 2 30.42");
     }
     else if (selectedAnswer == 1)
     {
-        oled_puts(" 1 60.42>2 30.42");
+        oled_puts(" 1 60.83>2 30.42");
     }
     else
     {
-        oled_puts(" 1 60.42 2 30.42");
+        oled_puts(" 1 60.83 2 30.42");
     }
 
     oled_set_cursor(0, 4);

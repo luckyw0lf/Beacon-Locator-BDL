@@ -16,6 +16,7 @@
 #include "state_navigation.h"
 #include "state_game_missions.h"
 #include "state_game_intro.h"
+#include "lock.h"
 
 // -----------------------------------------------------------------------------
 // Local type definitions
@@ -90,6 +91,17 @@ State_t STATE_FINISH = {
     &finish_main,
     &finish_exit,
     "FINISH"
+};
+void openLock(StateMachine_t *sm){
+    sm->isBusy = false;
+    lock_init();
+    lock_open();
+}
+State_t LOCK_OPEN = {
+    &emptyFunc,
+    &openLock,
+    &emptyFunc,
+    "LOCK OPEN"
 };
 // For menu
 State_t STATE_RECONFIG_KEYPAD = { &emptyFunc, &keypadReInit, &emptyFunc, "ADMIN_MODE" };

@@ -19,6 +19,7 @@ extern State_t STATE_RECONFIG_KEYPAD;
 extern State_t STATE_SEARCHING_BEACON;
 extern State_t STATE_NAVIGATION;
 extern State_t STATE_GAME_INTRO;
+extern State_t LOCK_OPEN;
 extern char keypadFlag;
 extern uint16_t touch_reg;
 extern uint16_t pressedKey;
@@ -29,11 +30,12 @@ static menuItem_t menuItems[] = {
     {&STATE_ADMIN_MODE, "Admin mode"},
     {&STATE_INIT, "Re-initialize"},
     {&STATE_RECONFIG_KEYPAD, "Reconfig Touch"},
-    {&STATE_SEARCHING_BEACON, "Beacon search"}
+    {&STATE_SEARCHING_BEACON, "Beacon search"},
+    {&LOCK_OPEN, "Lock open"}
 };
 
 // item count
-#define MENU_ITEM_COUNT 5
+#define MENU_ITEM_COUNT 6
 
 static unsigned char menuPos;
 

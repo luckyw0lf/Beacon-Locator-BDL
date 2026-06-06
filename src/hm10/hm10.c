@@ -45,16 +45,16 @@ void hm10_read_beacons() {
     while (lpuart2_rxcnt() > 0) { 
         uint8_t data = lpuart2_getchar();
         buffer[string_index] = (char)data;
-         printf("%c", data);
+        //  printf("%c", data);
         string_index++;
 
-        if (string_index >= sizeof(buffer) - 1)
-       {
-       printf("HM10 buffer reset\r\n");
-       string_index = 0;
-       memset(buffer, 0, sizeof(buffer));
-       return;
-      }
+    //     if (string_index >= sizeof(buffer) - 1)
+    //    {
+    //    printf("HM10 buffer reset\r\n");
+    //    string_index = 0;
+    //    memset(buffer, 0, sizeof(buffer));
+    //    return;
+    //   }
 
         if (data == '\n' || data == '\r') {
             // parse the data, reset buffer

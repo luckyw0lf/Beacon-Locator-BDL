@@ -85,30 +85,30 @@ static void show_question_page(void)
 
     if (selectedAnswer == 0)
     {
-        oled_puts(">1 Sensor 2 Vent.");
+        oled_puts("> Sensor   Ventiel");
     }
     else if (selectedAnswer == 1)
     {
-        oled_puts(" 1 Sensor >2 Vent.");
+        oled_puts("  Sensor > Ventiel");
     }
     else
     {
-        oled_puts(" 1 Sensor  2 Vent");
+        oled_puts("  Sensor   Ventiel");
     }
 
     oled_set_cursor(0, 4);
 
     if (selectedAnswer == 2)
     {
-        oled_puts(">3 Scherm  4 Accu");
+        oled_puts("> Scherm   Accu");
     }
     else if (selectedAnswer == 3)
     {
-        oled_puts(" 3 Scherm >4 Accu");
+        oled_puts("  Scherm > Accu");
     }
     else
     {
-        oled_puts(" 3 Scherm 4 Accu");
+        oled_puts("  Scherm   Accu");
     }
 
     oled_set_cursor(0, 6);

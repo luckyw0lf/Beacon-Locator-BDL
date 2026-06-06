@@ -90,23 +90,7 @@ void navigation_main(StateMachine_t *sm)
       Target beacon was already found.
       Now wait for the player to confirm that they reached the room.
      */
-    if (keypadFlag)
-{
-    keypadFlag = false;
 
-    if (pressedKey == ENTER)
-    {
-        printf("TEST: Skipping navigation, going to route mission\r\n");
-
-        addToQueue(sm, routeProfiles[activeRouteId].puzzleState);
-
-        targetReached = false;
-        cooldownTimerTriggered = false;
-        sm->isBusy = false;
-
-        return;
-    }
-}
     if (targetReached == true && hm10_isBusy == false)
     {
         while(lpuart2_rxcnt()){

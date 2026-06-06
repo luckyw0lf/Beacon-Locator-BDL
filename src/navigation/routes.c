@@ -53,12 +53,12 @@ const char beaconDefCount = 10;
  * 0006 = target room
  */
 const RouteBeaconRule_t startToExperienceRules[] = {
-    {BEACON_B01, BEACON_ROLE_PASS_BY,  -75, "Signal gevonden", "Ga door", ""},
-    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Ga door", ""},
-    {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Ga door", ""},
-    {BEACON_B04, BEACON_ROLE_PASS_BY,  -70, "Sla linksaf", "Vanaf de gang", ""},
-    {BEACON_B05, BEACON_ROLE_APPROACH, -70, "Je bent dichtbij", "Ga door", ""},
-    {BEACON_B06, BEACON_ROLE_TARGET,   -65, "Ervaringskamer", "Bereikt", "Druk ENTER"}
+    {BEACON_B01, BEACON_ROLE_PASS_BY,  -80, "Signal gevonden", "Ga rechts", ""},
+    {BEACON_B02, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Links door de hal", ""},
+   // {BEACON_B03, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Ga door", ""},
+    {BEACON_B04, BEACON_ROLE_PASS_BY,  -80, "Sla linksaf", "Vanaf de gang", ""},
+    {BEACON_B05, BEACON_ROLE_APPROACH, -80, "Je bent dichtbij", "Zoek de", "juiste kamer"},
+    {BEACON_B06, BEACON_ROLE_TARGET,   -76, "Ervaringskamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -69,9 +69,9 @@ const RouteBeaconRule_t startToExperienceRules[] = {
  * 0003 is the target room.
  */
 const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
-    {BEACON_B05, BEACON_ROLE_PASS_BY,  -75, "Goede richting", "Volg de gang", ""},
-    {BEACON_B04, BEACON_ROLE_APPROACH, -75, "Je bent dichtbij", "Zoek de kamer", "aan je rechterkant"},
-    {BEACON_B03, BEACON_ROLE_TARGET,   -75, "Vraag kamer", "Bereikt", "Druk ENTER"}
+    {BEACON_B05, BEACON_ROLE_PASS_BY,  -76, "Goede richting", "Volg de gang", ""},
+    {BEACON_B04, BEACON_ROLE_APPROACH, -80, "Je bent dichtbij", "Zoek de kamer", "aan je rechterkant"},
+    {BEACON_B03, BEACON_ROLE_TARGET,   -76, "Vraag kamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -84,11 +84,11 @@ const RouteBeaconRule_t experienceToMaterialQuestionRules[] = {
  * 000A is the target room.
  */
 const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
-    {BEACON_B04, BEACON_ROLE_PASS_BY, -75, "Goede richting", "Ga door", ""},
-    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Ga door", "Volg de route", ""},
-    {BEACON_B08, BEACON_ROLE_PASS_BY, -70, "Sla linksaf", "Vanaf de gang", ""},
-    {BEACON_B09, BEACON_ROLE_PASS_BY, -70, "Goed bezig", "Ga door", ""},
-    {BEACON_B10, BEACON_ROLE_TARGET,  -70, "Materiaal kamer", "Bereikt", "Druk ENTER"}
+    {BEACON_B04, BEACON_ROLE_PASS_BY, -80, "Goede richting", "Ga door", "ga naar rechts"},
+    {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Ga door de deur", "dan naar links", ""},
+    {BEACON_B08, BEACON_ROLE_PASS_BY, -65, "Goede richting", "ga rechtdoor", "dubbele deuren"},
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -70, "Goed bezig, 20 meter", "Ga rechts door de", "rollendeur"},
+    {BEACON_B10, BEACON_ROLE_TARGET,  -78, "Materiaal kamer", "Bereikt", "Druk ENTER"}
 };
 
 /*
@@ -100,7 +100,7 @@ const RouteBeaconRule_t materialQuestionToCollectionRules[] = {
  * 0008 is  the final target.
  */
 const RouteBeaconRule_t collectionToBuildTestRules[] = {
-    {BEACON_B09, BEACON_ROLE_PASS_BY, -75, "Goed bezig", "Zoek verder", ""},
+    {BEACON_B09, BEACON_ROLE_PASS_BY, -75, "Goed bezig", "Ga rechtdoor door", "dubble deuren"},
     {BEACON_B07, BEACON_ROLE_PASS_BY, -75, "Je bent dichtbij", "Zoek de kamer", ""},
     {BEACON_B08, BEACON_ROLE_TARGET,  -70, "Test kamer", "Bereikt", "Druk ENTER"}
 };
@@ -119,9 +119,9 @@ const RouteProfile_t routeProfiles[] = {
     {
         ROUTE_EXPERIENCE_TO_MATERIAL_QUESTION,
         "Experience Room to Question Room",
-        "Target:",
-        "Question room",
-        "Follow the route",
+        "Doel: Welke",
+        "materialen?",
+        "Ga langzaam terug",
         experienceToMaterialQuestionRules,
         ARRAY_COUNT(experienceToMaterialQuestionRules),
         &STATE_MATERIAL_QUESTION
@@ -129,9 +129,9 @@ const RouteProfile_t routeProfiles[] = {
     {
         ROUTE_MATERIAL_QUESTION_TO_COLLECTION,
         "Question Room to Material Room",
-        "Target:",
-        "Material room",
-        "Follow the route",
+        "Doel: Materialen",
+        "Verlaat de kamer",
+        "Ga rechts",
         materialQuestionToCollectionRules,
         ARRAY_COUNT(materialQuestionToCollectionRules),
         &STATE_MATERIAL_COLLECTION
@@ -139,9 +139,9 @@ const RouteProfile_t routeProfiles[] = {
     {
         ROUTE_COLLECTION_TO_BUILD_TEST,
         "Material Room to Final Room",
-        "Target:",
-        "Final room",
-        "Follow the route",
+        "LAATSTE KAMER!!",
+        "Doel: Bouw en test",
+        "Ga langzaam terug",
         collectionToBuildTestRules,
         ARRAY_COUNT(collectionToBuildTestRules),
         &STATE_BUILD_TEST,
